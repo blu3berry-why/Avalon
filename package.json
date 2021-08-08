@@ -1,0 +1,15 @@
+{
+  "name": "avalon",
+  "version": "1.0.0",
+  "description": "This is a board game which we like to play but we cant get it on papper so we are making it to be able to play it online.",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -1,0 +1,80 @@
+ GET POST / - Loginpage
+    LoginMW
+
+ GET /avalon - ingame homepage
+    AuthMW
+
+ GET /avalon/join/new
+    AuthMW
+    CreateLobbyMW
+    JoinLobbyMW
+
+ GET /avalon/join/?:lobby_id
+    AuthMW
+    CreateLobbyMW
+    JoinLobbyMW
+
+ GET POST /avalon/game/start - to start the game plus the nickname selection
+    AuthMW
+    RandomRoleMW
+    ShowRoleMW
+    CheckScoreMW
+
+ GET POST /avalon/game/play/select
+    AuthMW
+    SelectMW
+
+ GET POST/avalon/game/play/vote
+    AuthMW
+    VoteMW
+
+ GET POST /avalon/game/play/adventure/going
+    AuthMW
+    AdventureMW
+    VoteMW
+    CheckScoreMW
+
+ GET /avalon/game/play/adventure/staying
+    
+
+ GET /avalon/game/play/reveal
+    
+
+ GET /avalon/game/play/assasin
+    AuthMW
+    AssasinGuessMW
+
+ GET /avalon/game/play/end
+    AuthMW
+    AssasinRedirectMW
+ 
+ GET /avalon/game/play
+    AuthMW
+    CheckScoreMW
+
+
+ Middlewares:
+
+ AuthMW
+ LoginMW
+ LogoutMW
+
+ CreateLobbyMW
+ JoinLobbyMW
+ LeaveLobbyMW
+
+
+ AdventureMW - checks if the person went on the adventure if not redirects to /avalon/game/adventure/?staying
+ VoteMW - checks if the person already voted and if not takes his vote redirects to /avalon/game/adventure/?staying
+
+ RandomRoleMW - randomises the characters and puts the key-value pairs in the database
+ ShowRoleMW - gets the players name and searches in the database and redirects to /avalon/game/show_role/character
+
+ AssasinRedirectMW - if the game is over and the blue team wins and if the player is the assasin redirects him to the guessing page /avalon/game/play/assasin
+
+ AssasinGuessMW - checks if the player guessed merlin
+
+ CheckScoreMW - redirects to /avalon/game/play/end if either team has 3 points
+
+ SelectMW - gets the player's selected team
+
