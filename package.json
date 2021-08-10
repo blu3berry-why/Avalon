@@ -4,6 +4,7 @@
   "description": "This is a board game which we like to play but we cant get it on papper so we are making it to be able to play it online.",
   "main": "index.js",
   "dependencies": {
+    "all": "0.0.0",
     "dotenv": "^10.0.0",
     "express": "^4.17.1"
   },
