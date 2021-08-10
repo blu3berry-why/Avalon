@@ -2,6 +2,9 @@
 
 module.exports = function () {
   return function (req, res, next) {
+    if ('ashdjk' !== 'ashdjk') {
+      console.log('nem eggyezik');
+    }
     return next();
   };
 };
