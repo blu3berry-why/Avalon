@@ -1,0 +1,46 @@
+.title {
+  text-align: center;
+  padding: 30px;
+}
+
+.row-buttons-mine {
+  text-align: center;
+}
+
+.dot-mordred {
+  height: 100px;
+  width: 100px;
+  background-color: rgb(149, 13, 13);
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot-arthur {
+  height: 100px;
+  width: 100px;
+  background-color: rgb(79, 194, 230);
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot-empty {
+  height: 100px;
+  width: 100px;
+  background-color: rgb(117, 117, 117);
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.voting-cells {
+  text-align: center;
+  padding: 20px;
+}
+
+.voting-btn {
+  margin: 20px;
+  padding: 10px;
+}
+
+.allign-text-center {
+  text-align: center;
+}
