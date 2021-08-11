@@ -44,7 +44,7 @@ module.exports = function (app) {
 
   // TODO homepage instead of login page
   // The home page after logging in
-  app.get('avalon', authMW(), renderMW('lobby.html'));
+  app.get('/avalon', authMW(), renderMW('home.html'));
 
   // The action of making a new lobby and automatically joining after
   app.get(
@@ -73,6 +73,15 @@ module.exports = function (app) {
   */
   app.get('/avalon/game/start', authMW(), randomRoleMW(), showRoleMW());
 
+  // show the character role
+
+  app.get(
+    '/avalon/game/character',
+    authMW(),
+    showRoleMW(),
+    renderMW('character.html')
+  );
+
   // the selection page
   app.get('/avalon/game/select', authMW(), renderMW('select.html'));
 
@@ -82,17 +91,17 @@ module.exports = function (app) {
   // showing the voting tab
 
   //TODO might be better to have a pop up
-  app.get('/avalon/game/vote', authMW(), renderMW('vote.html'));
+  app.get('/avalon/game/voting', authMW(), renderMW('voting.html'));
 
   // getting the result of the vote
-  app.post('/avalon/game/vote', authMW(), voteMW());
+  app.post('/avalon/game/voting', authMW(), voteMW());
 
   // only for those who are going on the adventure : voting , for everyone else the scores show
   app.get(
     '/avalon/game/adventure',
     authMW(),
     adventureMW(),
-    renderMW('vote.html')
+    renderMW('voting.html')
   );
 
   //getting the results of the adventure

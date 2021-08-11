@@ -55,6 +55,10 @@
     AuthMW
     CheckScoreMW
 
+ GET /avalon/game/character
+   AuthMW
+   ShowRoleMW
+
 
  Middlewares:
 
