@@ -11,14 +11,14 @@
 
  GET /avalon/join/?:lobby_id
     AuthMW
-    CreateLobbyMW
+    CreateLobbyMW  //TODO why did we put this here? this should not be here
     JoinLobbyMW
 
  GET POST /avalon/game/start - to start the game plus the nickname selection
     AuthMW
     RandomRoleMW
     ShowRoleMW
-    CheckScoreMW
+    CheckScoreMW // TODO I don't think that sould be here
 
  GET POST /avalon/game/play/select
     AuthMW
@@ -34,16 +34,19 @@
     VoteMW
     CheckScoreMW
 
+// TODO this is useless unless we have an adventure ongoing tab
  GET /avalon/game/play/adventure/staying
     
-
+// TODO make a view for this
  GET /avalon/game/play/reveal
     
 
- GET /avalon/game/play/assasin
+ GET /avalon/game/play/assassin
     AuthMW
     AssasinGuessMW
 
+
+//TODO make a view for this
  GET /avalon/game/play/end
     AuthMW
     AssasinRedirectMW
