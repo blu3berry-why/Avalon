@@ -1,3 +1,5 @@
+'use strict';
+
 // getting environment variables from the .env file
 const dotenv = require('dotenv');
 

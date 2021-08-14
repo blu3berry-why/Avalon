@@ -1,3 +1,5 @@
+'use strict';
+
 // gets the player's selected team
 
 module.exports = function () {

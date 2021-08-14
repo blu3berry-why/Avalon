@@ -1,3 +1,5 @@
+'use strict';
+
 //---------------------------------
 //  IMPORTS
 //---------------------------------
@@ -31,6 +33,16 @@ const voteMW = require('../middlewares/game/midgame/voteMW');
 //endgame
 const assassinGuessMW = require('../middlewares/game/endgame/assassinGuessMW');
 const assassinRedirectMW = require('../middlewares/game/endgame/assassinRedirectMW');
+
+//---------------------------------
+//  LOCAL SERVICES
+//---------------------------------
+
+function getCurrentPath() {
+  let path = String(__dirname);
+  path = path.replace('routes', '');
+  return path;
+}
 
 //---------------------------------
 //  ROUTES
@@ -131,4 +143,21 @@ module.exports = function (app) {
 
   //just the game score
   app.get('/avalon/game', authMW(), checkScoreMW(), renderMW('gamescore.html'));
+
+  //RESOURCES
+
+  //style.css
+  app.get('/resources/style', function (req, res, next) {
+    res.sendFile(getCurrentPath() + 'views/static/css/style.css');
+  });
+
+  //bootstrap.min.css
+  app.get('/resources/bootstrap', function (req, res, next) {
+    res.sendFile(getCurrentPath() + 'views/static/css/bootstrap.min.css');
+  });
+
+  //login.css
+  app.get('/resources/login', function (req, res, next) {
+    res.sendFile(getCurrentPath() + 'views/static/css/login.css');
+  });
 };

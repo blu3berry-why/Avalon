@@ -1,3 +1,5 @@
+'use strict';
+
 //reders the static
 
 module.exports = function (viewName) {
