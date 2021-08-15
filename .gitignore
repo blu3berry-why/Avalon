@@ -1,4 +1,4 @@
 # ignore the npm packages
 node_modules/
 .env
-
+setup.py
