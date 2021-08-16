@@ -4,12 +4,25 @@ const Client = db.MongoClient;
 
 //environment variables
 const dotenv = require('dotenv');
-dotenv.config({ path: '../../.env' });
+dotenv.config({ path: '../../../.env' });
 
 // the url to the database
 const url = process.env.MONGODB_URL;
+const databaseName = process.env.MONGODB_DATABASE_NAME;
 
-//TODO simplify parameters as a class
+// !NOTE: this is all enough to do anything with the database the work below is now useless
+const mongoose = require('mongoose');
+mongoose.connect(url + databaseName, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+module.exports.db = mongoose;
+
+// !NOTE: end of useful things
+
+//TODO: simplify parameters as a class
+
 /*
 class DbData{
     DbData(databaseName, collectionName, query, etc...)
@@ -20,7 +33,7 @@ class DbData{
  * Creates a database, it's not visible until it has content!
  * @param {String} databaseName The name of the database
  */
-module.exports.createDB = function (databaseName) {
+const createDB = function (databaseName) {
   Client.connect(url + databaseName, function (err, db) {
     if (err) throw err;
     console.log('Database cerated');
@@ -33,7 +46,7 @@ module.exports.createDB = function (databaseName) {
  * @param {String} databaseName The name of the database
  * @param {String} collectionName The collection's name
  */
-module.exports.createCollection = function (databaseName, collectionName) {
+const createCollection = function (databaseName, collectionName) {
   Client.connect(url, function (err, db) {
     if (err) throw err;
     let dbo = db.db(databaseName);
@@ -51,11 +64,8 @@ module.exports.createCollection = function (databaseName, collectionName) {
  * @param {String} collectionName The collection's name
  * @param {Object} document The document to insert
  */
-module.exports.insertDocument = function (
-  databaseName,
-  collectionName,
-  document
-) {
+const insertDocument = function (databaseName, collectionName, document) {
+  console.log(databaseName, collectionName, document, url);
   Client.connect(url, function (err, db) {
     if (err) throw err;
     let dbo = db.db(databaseName);
@@ -73,11 +83,7 @@ module.exports.insertDocument = function (
  * @param {String} collectionName The collection's name
  * @param {List of Objects} documents The list of document to insert
  */
-module.exports.insertManyDocuments = function (
-  databaseName,
-  collectionName,
-  documents
-) {
+const insertManyDocuments = function (databaseName, collectionName, documents) {
   Client.connect(url, function (err, db) {
     if (err) throw err;
     let dbo = db.db(databaseName);
@@ -97,7 +103,7 @@ module.exports.insertManyDocuments = function (
  * @param {Object} query An object with the query data
  * @returns A promise with the data
  */
-module.exports.findDocument = function (databaseName, collectionName, query) {
+const findDocument = function (databaseName, collectionName, query) {
   return new Promise((resolve, reject) => {
     Client.connect(url, function (err, db) {
       if (err) throw err;
@@ -119,11 +125,7 @@ module.exports.findDocument = function (databaseName, collectionName, query) {
  * @param {Object} query An object with the query data you can give it regular expressions as {name: /regular expression/}
  * @returns A promise with the data
  */
-module.exports.findManyDocuments = function (
-  databaseName,
-  collectionName,
-  query
-) {
+const findManyDocuments = function (databaseName, collectionName, query) {
   return new Promise((resolve, reject) => {
     Client.connect(url, function (err, db) {
       if (err) throw err;
@@ -148,12 +150,7 @@ module.exports.findManyDocuments = function (
  * @param {Object} sortby The way you want to sort it example {name : 1} 1 ia ascending -1 is descending
  * @returns A promise with the data
  */
-module.exports.sortDocuments = function (
-  databaseName,
-  collectionName,
-  query,
-  sortby
-) {
+const sortDocuments = function (databaseName, collectionName, query, sortby) {
   return new Promise((resolve, reject) => {
     Client.connect(url, function (err, db) {
       if (err) throw err;
@@ -179,7 +176,7 @@ module.exports.sortDocuments = function (
  * @param {String} collectionName The collection's name
  * @param {Object} query An object with the query data
  */
-module.exports.deleteDocument = function (databaseName, collectionName, query) {
+const deleteDocument = function (databaseName, collectionName, query) {
   Client.connect(url, function (err, db) {
     if (err) throw err;
     let dbo = db.db(databaseName);
@@ -197,11 +194,7 @@ module.exports.deleteDocument = function (databaseName, collectionName, query) {
  * @param {String} collectionName The collection's name
  * @param {Object} query An object with the query data
  */
-module.exports.deleteManyDocuments = function (
-  databaseName,
-  collectionName,
-  query
-) {
+const deleteManyDocuments = function (databaseName, collectionName, query) {
   Client.connect(url, function (err, db) {
     if (err) throw err;
     let dbo = db.db(databaseName);
@@ -218,7 +211,7 @@ module.exports.deleteManyDocuments = function (
  * @param {String} databaseName The name of the database
  * @param {String} collectionName The collection's name
  */
-module.exports.dropCollection = function (databaseName, collectionName) {
+const dropCollection = function (databaseName, collectionName) {
   Client.connect(url, function (err, db) {
     if (err) throw err;
     let dbo = db.db(databaseName);
@@ -238,7 +231,7 @@ module.exports.dropCollection = function (databaseName, collectionName) {
  * @param {Object} query An object with the query data
  * @param {Object} newValues The new values
  */
-module.exports.updateDocument = function (
+const updateDocument = function (
   databaseName,
   collectionName,
   query,
@@ -266,7 +259,7 @@ module.exports.updateDocument = function (
  * @param {Object} query An object with the query data
  * @param {Object} newValues The new values
  */
-module.exports.updateManyDocuments = function (
+const updateManyDocuments = function (
   databaseName,
   collectionName,
   query,
@@ -283,4 +276,39 @@ module.exports.updateManyDocuments = function (
         db.close();
       });
   });
+};
+
+const lobbyCollection = 'lobbyCollection';
+const userCollection = 'userCollection';
+
+//------------------------------------------
+// SPECIFIED FUNCTIONS
+//------------------------------------------
+
+//LOBBY RELATED FUNCTIONS
+
+// Create a new lobby
+module.exports.createLobby = function (lobby) {
+  insertDocument(databaseName, lobbyCollection, lobby);
+};
+
+// Update lobby
+module.exports.updateLobby = function (query, newValue) {
+  updateDocument(databaseName, collectionName, query, newValue);
+};
+
+// Delete lobby
+module.exports.deleteLobby = function (query) {
+  deleteDocument(databaseName, collectionName, query);
+};
+
+// Delete many lobbies
+module.exports.deleteManyLobbies = function (query) {
+  deleteManyDocuments(databaseName, collectionName, query);
+};
+
+//USER RELATED FUNCTIONS
+// Add a new user to the db
+module.exports.createUser = function (user) {
+  insertDocument(databaseName, userCollection, user);
 };
