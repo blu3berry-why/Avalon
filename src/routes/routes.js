@@ -33,6 +33,7 @@ const voteMW = require('../middlewares/game/midgame/voteMW');
 //endgame
 const assassinGuessMW = require('../middlewares/game/endgame/assassinGuessMW');
 const assassinRedirectMW = require('../middlewares/game/endgame/assassinRedirectMW');
+const passport = require('passport');
 
 //---------------------------------
 //  LOCAL SERVICES
@@ -49,10 +50,32 @@ function getCurrentPath() {
 //---------------------------------
 module.exports = function (app) {
   // The main page. Login form
-  app.get('/', renderMW('login.html'));
+  app.get(
+    '/',
+    /*(req, res, next) => {
+      if (req.session.viewcount) {
+        req.session.viewcount++;
+      } else {
+        req.session.viewcount = 1;
+      }
+      console.log(req);
+      res.send(
+        `<h1>You have visited this site: ${req.session.viewcount} times.</h1>`
+      );
+    }*/
+    renderMW('login.html')
+  );
 
   // This is where the user credential verification happens
-  app.post('/', loginMW());
+  app.post(
+    '/',
+    passport.authenticate('local'),
+    (req, res, next) => {
+      console.log(req.body);
+      return next();
+    },
+    loginMW()
+  );
 
   // TODO homepage instead of login page
   // The home page after logging in

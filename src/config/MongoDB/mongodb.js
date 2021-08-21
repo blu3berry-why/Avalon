@@ -4,7 +4,7 @@ const Client = db.MongoClient;
 
 //environment variables
 const dotenv = require('dotenv');
-dotenv.config({ path: '../../../.env' });
+dotenv.config({ path: './../../.env' });
 
 // the url to the database
 const url = process.env.MONGODB_URL;
@@ -12,13 +12,17 @@ const databaseName = process.env.MONGODB_DATABASE_NAME;
 
 // !NOTE: this is all enough to do anything with the database the work below is now useless
 const mongoose = require('mongoose');
-mongoose.connect(url + databaseName, {
+module.exports.connectionString = String(url + databaseName);
+
+mongoose.connect(this.connectionString, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
 module.exports.db = mongoose;
 
+require('./../../models/lobbyModel');
+require('./../../models/userModel');
 // !NOTE: end of useful things
 
 //TODO: simplify parameters as a class

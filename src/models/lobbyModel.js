@@ -14,6 +14,9 @@ const Lobby = db.model('Lobby', {
   orbeon: Boolean,
   percival: Boolean,
   arnold: Boolean,
+  //teams
+  good: Number,
+  evil: Number,
   // This keeps the scores and how many fails were in them
   score: [{ numberOfFails: Number }],
   // This one keeps the votes in count in all rounds and it can be traced back
