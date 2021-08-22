@@ -18,6 +18,7 @@ const createLobbyMW = require('../middlewares/lobby/createLobbyMW');
 const destroyLobbyMW = require('../middlewares/lobby/destroyLobbyMW');
 const joinLobbyMW = require('../middlewares/lobby/joinLobbyMW');
 const leaveLobbyMW = require('../middlewares/lobby/leaveLobbyMW');
+const updateLobbySettingsMW = require('../middlewares/lobby/updateLobbySettingsMW');
 
 // game logic middlewares
 
@@ -51,58 +52,44 @@ function getCurrentPath() {
 //---------------------------------
 module.exports = function (app) {
   // The main page. Login form
-  app.get(
-    '/',
-    /*(req, res, next) => {
-      if (req.session.viewcount) {
-        req.session.viewcount++;
-      } else {
-        req.session.viewcount = 1;
-      }
-      console.log(req);
-      res.send(
-        `<h1>You have visited this site: ${req.session.viewcount} times.</h1>`
-      );
-    }*/
-    renderMW('login.html')
-  );
+  app.get('/', renderMW('login.html'));
 
   // This is where the user credential verification happens
   app.post(
     '/',
-    (req, res, next) => {
-      console.log(req.body);
-      console.log(res.body);
-      return next();
-    },
     passport.authenticate('local', {
       failureRedirect: '/login-faliure',
       successRedirect: '/login-success',
     })
   );
 
+  // This is called when passport authentication is a success
   app.get('/login-success', loginMW());
 
+  // This route is used when the passport authenticatioun fails
   app.get('/login-faliure', (req, res, next) => {
     res.send('<h1>Username or password is not correct! Try again!</h1>');
   });
 
+  //registration
+  // TODO make a better register page
   app.get('/register', renderMW('register.html'));
-
   app.post('/register', registerMW());
+
+  // Logging out and deleting the session
+  app.get('/logout', logoutMW());
 
   // TODO homepage instead of login page
   // The home page after logging in
   app.get('/avalon', authMW(), renderMW('home.html'));
 
-  // The action of making a new lobby and automatically joining after
-  app.get(
-    '/avalon/join/new',
-    authMW(),
-    createLobbyMW(),
-    joinLobbyMW(),
-    renderMW('lobby.html')
-  );
+  // The action of making a new lobby and redirecting to the joining route
+  app.get('/avalon/join/new', authMW(), createLobbyMW());
+
+  //TODO to make settings.html and a GET and POST request and a Middlewware for it!
+  app.get('/avalon/join/:lobby_id/settings', renderMW('lobbysettings.html'));
+
+  app.post('/avalon/join/:lobby_id/settings', updateLobbySettingsMW());
 
   // TODO decide if it should be POST or USE or it could also be get if the lobby id is provided
 

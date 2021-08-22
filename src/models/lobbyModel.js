@@ -8,10 +8,10 @@ const Lobby = db.model('Lobby', {
   players: [{ username: String, nickname: String }],
   // These booleans tell if a certain special character is picked
   //(Merlin is always there and by the players we can add the minions of Mordres and the servants of Arthur)
-  assasin: Boolean,
+  assassin: Boolean,
   mordred: Boolean,
   morgana: Boolean,
-  orbeon: Boolean,
+  oberon: Boolean,
   percival: Boolean,
   arnold: Boolean,
   //teams
