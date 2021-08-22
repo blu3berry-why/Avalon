@@ -2,7 +2,7 @@
 
 module.exports = function () {
   return function (req, res, next) {
-    req.session.loggedin = true;
-    return res.redirect('/avalon');
+    const route = '/avalon/join/' + req.session.lobbyCode;
+    return res.redirect(route);
   };
 };
