@@ -11,6 +11,7 @@ const renderMW = require('../middlewares/common/renderMW');
 const authMW = require('../middlewares/webauth/authMW');
 const loginMW = require('../middlewares/webauth/loginMW');
 const logoutMW = require('../middlewares/webauth/logoutMW');
+const registerMW = require('../middlewares/webauth/registerMW');
 
 // middlewares for manipulating the lobby
 const createLobbyMW = require('../middlewares/lobby/createLobbyMW');
@@ -69,13 +70,26 @@ module.exports = function (app) {
   // This is where the user credential verification happens
   app.post(
     '/',
-    passport.authenticate('local'),
     (req, res, next) => {
       console.log(req.body);
+      console.log(res.body);
       return next();
     },
-    loginMW()
+    passport.authenticate('local', {
+      failureRedirect: '/login-faliure',
+      successRedirect: '/login-success',
+    })
   );
+
+  app.get('/login-success', loginMW());
+
+  app.get('/login-faliure', (req, res, next) => {
+    res.send('<h1>Username or password is not correct! Try again!</h1>');
+  });
+
+  app.get('/register', renderMW('register.html'));
+
+  app.post('/register', registerMW());
 
   // TODO homepage instead of login page
   // The home page after logging in

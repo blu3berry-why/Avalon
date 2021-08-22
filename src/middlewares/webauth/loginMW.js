@@ -2,6 +2,7 @@
 
 module.exports = function () {
   return function (req, res, next) {
-    return next();
+    req.session.loggedin = true;
+    return res.redirect('/avalon');
   };
 };

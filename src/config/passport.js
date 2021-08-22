@@ -2,6 +2,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const db = require('./MongoDB/mongodb').db;
 const User = db.models.User;
+const validatePassword = require('./../helpers/passwordUtils').validatePassword;
 
 // The passportMW requires this kind of object with the new names if the properties of the body object is different
 // passport looks for these properties

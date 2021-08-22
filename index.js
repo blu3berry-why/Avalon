@@ -14,7 +14,10 @@ const express = require('express');
 let app = express();
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+// !QUESTION: what does urlencoded options extenden mean?
+// with extended: true the post requests did not work
+app.use(express.urlencoded({ extended: false }));
 
 app.use(express.static('/src/views/static'));
 
