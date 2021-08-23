@@ -5,6 +5,7 @@ module.exports = function () {
   return function (req, res, next) {
     if (
       typeof req.body.username === 'undefined' ||
+      typeof req.body.email === 'undefined' ||
       typeof req.body.password === 'undefined'
     ) {
       return res.redirect('/');
@@ -16,7 +17,7 @@ module.exports = function () {
       username: req.body.username,
       hash: secureCredentials.hash,
       salt: secureCredentials.salt,
-      emailaddress: 'email@email.com',
+      emailaddress: req.body.email,
       _friends: [],
     };
     db.models.User.create(newUser);
