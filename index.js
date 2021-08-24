@@ -7,7 +7,7 @@ dotenv.config();
 //console.log(process.env);
 
 // mongodb database
-const db = require('./src/config/MongoDB/mongodb');
+const db = require('./src/config/MongoDB/mongoose');
 
 //setting up express
 const express = require('express');

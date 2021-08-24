@@ -52,11 +52,11 @@ function getCurrentPath() {
 //---------------------------------
 module.exports = function (app) {
   // The main page. Login form
-  app.get('/', renderMW('login.html'));
+  app.get('/login', renderMW('login.html'));
 
   // This is where the user credential verification happens
   app.post(
-    '/',
+    '/login',
     passport.authenticate('local', {
       failureRedirect: '/login-faliure',
       successRedirect: '/login-success',
@@ -79,27 +79,18 @@ module.exports = function (app) {
   // Logging out and deleting the session
   app.get('/logout', logoutMW());
 
-  // TODO homepage instead of login page
-  // The home page after logging in
-  app.get('/avalon', authMW(), renderMW('home.html'));
-
   // The action of making a new lobby and redirecting to the joining route
-  app.get('/avalon/join/new', authMW(), createLobbyMW());
+  app.get('/join/new', authMW(), createLobbyMW());
 
   //TODO to make settings.html and a GET and POST request and a Middlewware for it!
-  app.get('/avalon/join/:lobby_id/settings', renderMW('lobbysettings.html'));
+  app.get('/join/:lobby_id/settings', renderMW('lobbysettings.html'));
 
-  app.post('/avalon/join/:lobby_id/settings', updateLobbySettingsMW());
+  app.post('/join/:lobby_id/settings', updateLobbySettingsMW());
 
   // TODO decide if it should be POST or USE or it could also be get if the lobby id is provided
 
   // joining an existing lobby or redirecting to the home page
-  app.get(
-    '/avalon/join/:lobby_id',
-    authMW(),
-    joinLobbyMW(),
-    renderMW('lobby.html')
-  );
+  app.get('/join/:lobby_id', authMW(), joinLobbyMW(), renderMW('lobby.html'));
 
   // TODO because of the nicknames the request should be post to get the data but first we need a get to show the full lobby or we could do a post on /avalon/lobby
 
@@ -107,42 +98,37 @@ module.exports = function (app) {
         - randomizing roles
         - redirecting to the characters page      
   */
-  app.get('/avalon/game/start', authMW(), randomRoleMW(), showRoleMW());
+  app.get('/game/start', authMW(), randomRoleMW(), showRoleMW());
 
   // show the character role
 
   app.get(
-    '/avalon/game/character',
+    '/game/character',
     authMW(),
     showRoleMW(),
     renderMW('character.html')
   );
 
   // the selection page
-  app.get('/avalon/game/select', authMW(), renderMW('select.html'));
+  app.get('/game/select', authMW(), renderMW('select.html'));
 
   // getting the selected people
-  app.post('/avalon/game/select', authMW(), selectMW());
+  app.post('/game/select', authMW(), selectMW());
 
   // showing the voting tab
 
   //TODO might be better to have a pop up
-  app.get('/avalon/game/voting', authMW(), renderMW('voting.html'));
+  app.get('/game/voting', authMW(), renderMW('voting.html'));
 
   // getting the result of the vote
-  app.post('/avalon/game/voting', authMW(), voteMW());
+  app.post('/game/voting', authMW(), voteMW());
 
   // only for those who are going on the adventure : voting , for everyone else the scores show
-  app.get(
-    '/avalon/game/adventure',
-    authMW(),
-    adventureMW(),
-    renderMW('voting.html')
-  );
+  app.get('/game/adventure', authMW(), adventureMW(), renderMW('voting.html'));
 
   //getting the results of the adventure
   app.post(
-    '/avalon/game/adventure',
+    '/game/adventure',
     authMW(),
     adventureMW(),
     voteMW(),
@@ -151,22 +137,17 @@ module.exports = function (app) {
 
   // the assassins guess selection page
   app.get(
-    '/avalon/game/assassin',
+    '/game/assassin',
     authMW(),
     assassinRedirectMW(),
     renderMW('select.html')
   );
 
   // the result of the guess
-  app.post(
-    '/avalon/game/assassin',
-    authMW(),
-    assassinRedirectMW(),
-    assassinGuessMW()
-  );
+  app.post('/game/assassin', authMW(), assassinRedirectMW(), assassinGuessMW());
 
   //just the game score
-  app.get('/avalon/game', authMW(), checkScoreMW(), renderMW('gamescore.html'));
+  app.get('/game', authMW(), checkScoreMW(), renderMW('gamescore.html'));
 
   //RESOURCES
 
@@ -183,5 +164,14 @@ module.exports = function (app) {
   //login.css
   app.get('/resources/login', function (req, res, next) {
     res.sendFile(getCurrentPath() + 'views/static/css/login.css');
+  });
+
+  // TODO homepage instead of login page
+  // The home page after logging in
+  app.get('/', authMW(), renderMW('home.html'));
+
+  //any other literal that does not match the others
+  app.get('/*', (req, res, next) => {
+    res.redirect('/');
   });
 };

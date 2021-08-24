@@ -1,4 +1,4 @@
-const db = require('./../../config/MongoDB/mongodb').db;
+const db = require('./../../config/MongoDB/mongoose').db;
 const genPassword = require('./../../helpers/passwordUtils').genPassword;
 
 module.exports = function () {
@@ -16,6 +16,7 @@ module.exports = function () {
       username: req.body.username,
       hash: secureCredentials.hash,
       salt: secureCredentials.salt,
+      //TODO make a better from for this and match the elements
       emailaddress: 'email@email.com',
       _friends: [],
     };

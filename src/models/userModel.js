@@ -1,5 +1,5 @@
 const Schema = require('mongoose').Schema;
-const db = require('./../config/MongoDB/mongodb').db;
+const db = require('./../config/MongoDB/mongoose').db;
 
 const User = db.model('User', {
   username: String,
