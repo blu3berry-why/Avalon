@@ -1,5 +1,5 @@
 'use strict';
-const db = require('./../../config/MongoDB/mongodb').db;
+const db = require('./../../config/MongoDB/mongoose').db;
 
 module.exports = function () {
   return function (req, res, next) {
@@ -8,8 +8,6 @@ module.exports = function () {
       // !QUESTION: How will I know the user's information
       /*lobby.players.add({ username: 'username', nickname: 'nickname' });*/
       console.log(lobby);
-      // FIXME it runs twice why?
-      console.log('printing twice?');
     });
 
     return next();

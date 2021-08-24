@@ -5,9 +5,6 @@
     <title>Lobby</title>
     <link rel="stylesheet" href="/resources/bootstrap" />
     <link rel="stylesheet" href="/resources/style" />
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
   </head>
   <body>
     <nav class="navbar navbar-dark bg-dark">
@@ -19,11 +16,12 @@
           <button
             class="btn btn-outline-success"
             type="button"
-            data-toggle="modal"
-            data-target="#settingsModal"
+            href="/join/gshdgd/settings"
           >
             Settings
           </button>
+
+          <a href="settings" type="submit">sett</a>
         </div>
       </div>
     </nav>
@@ -60,20 +58,21 @@
 
     <div class="row">
       <div class="col text-center">
-        <a type="button" class="btn btn-outline-success" href="/avalon/game"
-          >Start</a
-        >
+        <a class="btn btn-default" href="/game">Start</a>
       </div>
     </div>
 
-    
+    <div class="row">
+      <div class="col text-center">
+        <button class="btn btn-default">Start</button>
+      </div>
+    </div>
+
     <div
       class="modal fade"
       id="settingsModal"
-      data-bs-backdrop="static"
-      data-bs-keyboard="false"
       tabindex="-1"
-      //role="dialog"
+      role="dialog"
       aria-labelledby="settingsModalLabel"
       aria-hidden="true"
     >
@@ -95,9 +94,8 @@
               <input
                 class="form-check-input"
                 type="checkbox"
-                value="true"
+                value=""
                 id="merlin"
-                checked
               />
               <label class="form-check-label" for="merlin"> Merlin </label>
             </div>

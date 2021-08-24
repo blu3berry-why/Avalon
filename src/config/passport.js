@@ -2,7 +2,7 @@
 
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const db = require('./MongoDB/mongodb').db;
+const db = require('./MongoDB/mongoose').db;
 const User = db.models.User;
 const validatePassword = require('./../helpers/passwordUtils').validatePassword;
 

@@ -5,7 +5,7 @@ module.exports = function () {
     if (req.session.loggedin === true) {
       return next();
     } else {
-      res.redirect('/');
+      res.redirect('/login');
     }
   };
 };

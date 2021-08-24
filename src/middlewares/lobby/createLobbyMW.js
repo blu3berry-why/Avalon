@@ -1,33 +1,19 @@
 'use strict';
 
-const db = require('./../../config/MongoDB/mongodb').db;
-const lobbyCode = require('./../../services/random').sixCharStr;
+const createLobby =
+  require('./../../services/lobbyMongooseManipulation').createLobby;
 
 module.exports = function () {
   return function (req, res, next) {
-    const newLobby = {
-      shortcode: lobbyCode(),
-      players: [],
-      assassin: false,
-      mordred: false,
-      morgana: false,
-      oberon: false,
-      percival: false,
-      arnold: false,
-
-      good: 0,
-      evil: 0,
-      score: [],
-      votes: [],
-    };
-
-    // !QUESTION: would it be better if we used the id from the database?
-    req.session.lobbyCode = newLobby.shortcode;
-
-    db.models.Lobby.create(newLobby);
-
-    //    return next();
-    const route = '/avalon/join/' + req.session.lobbyCode;
-    return res.redirect(route);
+    // creating a new lobby then redirecting to the newly created lobby page
+    createLobby()
+      .then(lobby => {
+        req.session.lobbyCode = lobby.shortcode;
+        return res.redirect(req.session.lobbyCode);
+      })
+      // error handling
+      .catch(err => {
+        if (err) return next(err);
+      });
   };
 };

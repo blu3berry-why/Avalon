@@ -1,4 +1,4 @@
-const db = require('./../../config/MongoDB/mongodb').db;
+const db = require('./../../config/MongoDB/mongoose').db;
 const genPassword = require('./../../helpers/passwordUtils').genPassword;
 
 module.exports = function () {
