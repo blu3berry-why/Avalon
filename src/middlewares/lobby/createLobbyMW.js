@@ -8,8 +8,7 @@ module.exports = function () {
     // creating a new lobby then redirecting to the newly created lobby page
     createLobby()
       .then(lobby => {
-        req.session.lobbyCode = lobby.shortcode;
-        return res.redirect(req.session.lobbyCode);
+        return res.redirect(lobby.shortcode);
       })
       // error handling
       .catch(err => {

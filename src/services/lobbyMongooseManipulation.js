@@ -131,16 +131,25 @@ function updateLobby(query, newData) {
 /*
 TODO:
   -ADD:
-      player
-      vote
+      player - done
+      vote - done
       score
 */
 
+/**
+ *
+ * @param {*} lobbyCode the code of the lobby
+ * @param {*} player in {username: 'username', role: ' '} form
+ * @returns the changec lobby
+ */
 function addPlayer(lobbyCode, player) {
   return new Promise((reject, resolve) => {
     Lobby.findOne({ shortcode: lobbyCode })
       .then(lobby => {
-        lobby.players.push(player);
+        if (!checkUserInLobby(lobby, player.username)) {
+          lobby.players.push(player);
+        }
+
         lobby.save(err => {
           if (err) reject(err);
           resolve(lobby);
@@ -246,5 +255,20 @@ function addVote(lobbyCode, round, vote) {
   });
 }
 
+function removeUser(lobbyCode, username) {
+  function filterUser(value) {
+    return !(value.username === username);
+  }
+
+  Lobby.findOne({ shortcode: lobbyCode }).then(lobby => {
+    lobby.players = lobby.players.filter(filterUser);
+    lobby.save();
+  });
+}
+
 module.exports.createLobby = createLobby;
 module.exports.updateLobby = updateLobby;
+module.exports.findLobby = findLobby;
+module.exports.addPlayer = addPlayer;
+module.exports.addVote = addVote;
+module.exports.removeUser = removeUser;
