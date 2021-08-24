@@ -93,6 +93,7 @@ module.exports = function (app) {
   app.get('/join/:lobby_id', authMW(), joinLobbyMW(), renderMW('lobby.html'));
 
   // TODO because of the nicknames the request should be post to get the data but first we need a get to show the full lobby or we could do a post on /avalon/lobby
+  app.get('/leave/:lobby_id', authMW(), leaveLobbyMW());
 
   /* starting the game:
         - randomizing roles
