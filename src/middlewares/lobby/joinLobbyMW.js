@@ -12,7 +12,6 @@ module.exports = function () {
         // console.log(lobby);
       })
       .catch(err => {
-        //FIXME why does this print an error?
         console.log('ERROR:', err);
       });
 

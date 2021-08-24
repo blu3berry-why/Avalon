@@ -140,19 +140,18 @@ TODO:
  *
  * @param {*} lobbyCode the code of the lobby
  * @param {*} player in {username: 'username', role: ' '} form
- * @returns the changec lobby
+ * @returns the changed lobby
  */
 function addPlayer(lobbyCode, player) {
-  return new Promise((reject, resolve) => {
+  return new Promise((resolve, reject) => {
     Lobby.findOne({ shortcode: lobbyCode })
       .then(lobby => {
         if (!checkUserInLobby(lobby, player.username)) {
           lobby.players.push(player);
         }
-
+        resolve(lobby);
         lobby.save(err => {
           if (err) reject(err);
-          resolve(lobby);
         });
       })
       .catch(err => {
