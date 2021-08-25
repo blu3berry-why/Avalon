@@ -32,6 +32,7 @@ const adventureMW = require('../middlewares/game/midgame/adventureMW');
 const checkScoreMW = require('../middlewares/game/midgame/checkScoreMW');
 const selectMW = require('../middlewares/game/midgame/selectMW');
 const voteMW = require('../middlewares/game/midgame/voteMW');
+const getChosen = require('../middlewares/game/midgame/getChosenMW');
 
 //endgame
 const assassinGuessMW = require('../middlewares/game/endgame/assassinGuessMW');
@@ -144,7 +145,7 @@ module.exports = function (app) {
   // showing the voting tab
 
   //TODO might be better to have a pop up
-  app.get('/game/voting', authMW(), renderMW('voting'));
+  app.get('/game/voting', authMW(),getChosen(), renderMW('voting'));
 
   // getting the result of the vote
   app.post('/game/voting', authMW(), voteMW());

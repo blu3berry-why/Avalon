@@ -12,11 +12,17 @@
     </div>
 
     <div style="text-align: center; padding: 50px">
+      <%for(let i = 0; i < score.length; i++){ if(score[i] === 'mordred'){%>
       <span class="dot-mordred"></span>
+      <%} if(score[i] === 'arthur'){%>
       <span class="dot-arthur"></span>
-      <span class="dot-mordred"></span>
-      <span class="dot-arthur"></span>
+      <%} if(score[i] === 'empty'){%>
       <span class="dot-empty"></span>
+      <%}}%>
+    </div>
+
+    <div style="text-align: center">
+      <h4>King: <%=king%></h4>
     </div>
 
     <div style="text-align: center">
