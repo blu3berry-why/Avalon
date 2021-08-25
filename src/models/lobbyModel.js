@@ -20,12 +20,24 @@ const Lobby = db.model('Lobby', {
   // This keeps the scores and how many fails were in them
   score: [{ numberOfFails: Number }],
   currentRound: Number,
+  currentAdventure: Number,
   // This one keeps the votes in count in all rounds and it can be traced back
   votes: [
     {
       // The rounds number
       round: Number,
+      // TODO
+      king: String,
+      choosen: [{ username: String }],
       // The players and their votes
+      results: [{ username: String, result: String }],
+    },
+  ],
+
+  // TODO
+  adventureVotes: [
+    {
+      noOfAdv: Number,
       results: [{ username: String, result: String }],
     },
   ],

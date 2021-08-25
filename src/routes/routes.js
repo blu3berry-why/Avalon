@@ -36,6 +36,7 @@ const voteMW = require('../middlewares/game/midgame/voteMW');
 const assassinGuessMW = require('../middlewares/game/endgame/assassinGuessMW');
 const assassinRedirectMW = require('../middlewares/game/endgame/assassinRedirectMW');
 const passport = require('passport');
+const getLobbySettingsMW = require('../middlewares/lobby/getLobbySettingsMW');
 
 //---------------------------------
 //  LOCAL SERVICES
@@ -52,7 +53,7 @@ function getCurrentPath() {
 //---------------------------------
 module.exports = function (app) {
   // The main page. Login form
-  app.get('/login', renderMW('login.html'));
+  app.get('/login', renderMW('login'));
 
   // This is where the user credential verification happens
   app.post(
@@ -73,7 +74,7 @@ module.exports = function (app) {
 
   //registration
   // TODO make a better register page
-  app.get('/register', renderMW('register.html'));
+  app.get('/register', renderMW('register'));
   app.post('/register', registerMW());
 
   // Logging out and deleting the session
@@ -83,14 +84,18 @@ module.exports = function (app) {
   app.get('/join/new', authMW(), createLobbyMW());
 
   //TODO to make settings.html and a GET and POST request and a Middlewware for it!
-  app.get('/join/:lobby_id/settings', renderMW('lobbysettings.html'));
+  app.get(
+    '/join/:lobby_id/settings',
+    getLobbySettingsMW(),
+    renderMW('lobbysettings')
+  );
 
   app.post('/join/:lobby_id/settings', updateLobbySettingsMW());
 
   // TODO decide if it should be POST or USE or it could also be get if the lobby id is provided
 
   // joining an existing lobby or redirecting to the home page
-  app.get('/join/:lobby_id', authMW(), joinLobbyMW(), renderMW('lobby.html'));
+  app.get('/join/:lobby_id', authMW(), joinLobbyMW(), renderMW('lobby'));
 
   // TODO because of the nicknames the request should be post to get the data but first we need a get to show the full lobby or we could do a post on /avalon/lobby
   app.get('/leave/:lobby_id', authMW(), leaveLobbyMW());
@@ -103,15 +108,20 @@ module.exports = function (app) {
 
   // show the character role
 
-  app.get(
-    '/game/character',
-    authMW(),
-    showRoleMW(),
-    renderMW('character.html')
-  );
+  app.get('/game/character', authMW(), showRoleMW(), renderMW('character'));
 
   // the selection page
-  app.get('/game/select', authMW(), renderMW('select.html'));
+  app.get(
+    '/game/select',
+    authMW(),
+
+    //FIXME
+    (req, res, next) => {
+      res.locals.characters = ['Jonny', 'Sam', 'Billy', 'Max'];
+      return next();
+    },
+    renderMW('select')
+  );
 
   // getting the selected people
   app.post('/game/select', authMW(), selectMW());
@@ -119,13 +129,13 @@ module.exports = function (app) {
   // showing the voting tab
 
   //TODO might be better to have a pop up
-  app.get('/game/voting', authMW(), renderMW('voting.html'));
+  app.get('/game/voting', authMW(), renderMW('voting'));
 
   // getting the result of the vote
   app.post('/game/voting', authMW(), voteMW());
 
   // only for those who are going on the adventure : voting , for everyone else the scores show
-  app.get('/game/adventure', authMW(), adventureMW(), renderMW('voting.html'));
+  app.get('/game/adventure', authMW(), adventureMW(), renderMW('voting'));
 
   //getting the results of the adventure
   app.post(
@@ -137,18 +147,13 @@ module.exports = function (app) {
   );
 
   // the assassins guess selection page
-  app.get(
-    '/game/assassin',
-    authMW(),
-    assassinRedirectMW(),
-    renderMW('select.html')
-  );
+  app.get('/game/assassin', authMW(), assassinRedirectMW(), renderMW('select'));
 
   // the result of the guess
   app.post('/game/assassin', authMW(), assassinRedirectMW(), assassinGuessMW());
 
   //just the game score
-  app.get('/game', authMW(), checkScoreMW(), renderMW('gamescore.html'));
+  app.get('/game', authMW(), checkScoreMW(), renderMW('gamescore'));
 
   //RESOURCES
 
@@ -167,9 +172,19 @@ module.exports = function (app) {
     res.sendFile(getCurrentPath() + 'views/static/css/login.css');
   });
 
+  ///FIXME just for testing
+  app.get(
+    '/test/settings',
+    (req, res, next) => {
+      res.locals.characters = ['Jonny', 'Sam', 'Billy', 'Max'];
+      return next();
+    },
+    renderMW('select')
+  );
+
   // TODO homepage instead of login page
   // The home page after logging in
-  app.get('/', authMW(), renderMW('home.html'));
+  app.get('/', authMW(), renderMW('home'));
 
   //any other literal that does not match the others
   app.get('/*', (req, res, next) => {

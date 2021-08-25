@@ -4,6 +4,7 @@ const addPlayer =
 
 module.exports = function () {
   return function (req, res, next) {
+    res.locals.lobbyCode = req.params.lobby_id;
     addPlayer(req.params.lobby_id, {
       username: req.user.username,
       role: ' ',
@@ -12,7 +13,6 @@ module.exports = function () {
         // console.log(lobby);
       })
       .catch(err => {
-        //FIXME why does this print an error?
         console.log('ERROR:', err);
       });
 
