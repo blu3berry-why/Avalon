@@ -19,6 +19,7 @@ const destroyLobbyMW = require('../middlewares/lobby/destroyLobbyMW');
 const joinLobbyMW = require('../middlewares/lobby/joinLobbyMW');
 const leaveLobbyMW = require('../middlewares/lobby/leaveLobbyMW');
 const updateLobbySettingsMW = require('../middlewares/lobby/updateLobbySettingsMW');
+const connectLobbyMW = require('../middlewares/lobby/connectLobbyMW');
 
 // game logic middlewares
 
@@ -108,7 +109,21 @@ module.exports = function (app) {
 
   // show the character role
 
-  app.get('/game/character', authMW(), showRoleMW(), renderMW('character'));
+  app.get(
+    '/game/character',
+    authMW(),
+    showRoleMW(),
+    //FIXME
+    (req, res, next) => {
+      res.locals.user_role = 'Mordred';
+      res.locals.picture = 'Insert picture';
+      res.locals.description = 'Here comes the description';
+      res.locals.team = 'Evil';
+      res.locals.members = ['Character1', 'Character2'];
+      return next();
+    },
+    renderMW('character')
+  );
 
   // the selection page
   app.get(
@@ -185,6 +200,8 @@ module.exports = function (app) {
   // TODO homepage instead of login page
   // The home page after logging in
   app.get('/', authMW(), renderMW('home'));
+
+  app.post('/', authMW(), connectLobbyMW());
 
   //any other literal that does not match the others
   app.get('/*', (req, res, next) => {

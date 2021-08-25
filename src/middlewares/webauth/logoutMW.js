@@ -9,6 +9,6 @@ module.exports = function () {
         }
       });
     }
-    return res.redirect('/');
+    return res.redirect('/login');
   };
 };

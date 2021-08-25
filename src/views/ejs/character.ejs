@@ -10,16 +10,15 @@
     <body>
         <div style="text-align: center;">
             <div style="margin: 30px;"><p>
-                <h1>Character</h1>
-                <h2>Picture</h2>
-                    Description</p>
+                <h1><%= user_role %></h1>
+                <h2><%= picture %></h2>
+                    <%= description %></p>
             </div>
             <div>
-                <h1>Evil:</h1>
-                <p>character1
-                    character2
-                    character3
-                </p>
+                <h1><%= team %>:</h1>
+                <% for( let i = 0; i < members.length; i++) { %>
+                <p> <%= members[i] %></p>
+                <% } %>
             </div>
         </div>
 <div class="allign-text-center">
