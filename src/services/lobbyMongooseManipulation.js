@@ -69,7 +69,7 @@ function createLobby(
       evil: set(_evil, 0),
       currentRound: set(_currentRound, 1),
       currentAdventure: set(_currentAdventure, 1),
-      score: set(_score, []),
+      score: set(_score, ['empty', 'empty', 'empty', 'empty', 'empty']),
       votes: set(_votes, []),
       adventureVotes: set(_adventureVotes, []),
       shortcode: lobbyCode(),
