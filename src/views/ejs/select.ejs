@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Select</title>
+  </head>
+
+  <body>
+    <div class="title">
+      <h1>Select the people who you want to go on the adventure.</h1>
+    </div>
+
+    <% for(let i = 0; i < characters.length; i++) {%>
+    <div class="form-check allign-text-center">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        value=""
+        name="<%=characters[i]%>"
+        id="flexCheckDefault<%=i%>"
+      />
+      <label class="form-check-label" for="flexCheckDefault<%=i%>">
+        <%=characters[i]%>
+      </label>
+    </div>
+    <%} %>
+
+    <div class="row-buttons-mine allign-text-center" style="margin: 50px">
+      <button type="button" class="btn btn-info">Clear</button>
+      <a type="button" class="btn btn-success" href="/game">Select</a>
+    </div>
+  </body>
+</html>

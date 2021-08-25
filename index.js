@@ -44,9 +44,9 @@ app.use(
 );
 
 app.use(express.static(__dirname + '/src/views/static'));
-app.set('views', __dirname + '/src/views/static');
-app.engine('html', require('ejs').renderFile);
-app.set('view engine', 'html');
+app.set('views', __dirname + '/src/views/ejs');
+//app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'ejs');
 
 require('./src/config/passport');
 
