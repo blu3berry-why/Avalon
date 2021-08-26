@@ -14,15 +14,19 @@
                 <h2><%= picture %></h2>
                     <%= description %></p>
             </div>
-            <div>
-                <h1><%= team %>:</h1>
+            <h1>Team : <%= team %></h1>
+            <div style="margin: 30px;">
+                <h3>Sees:</h3>
+                <%if(members.length === 0){%>
+                    -
+                    <%}%>
                 <% for( let i = 0; i < members.length; i++) { %>
                 <p> <%= members[i] %></p>
                 <% } %>
             </div>
         </div>
 <div class="allign-text-center">
-     <a type="button" class="btn btn-dark" href='/game'>Back</a>
+     <a type="button" class="btn btn-dark" href='/game/<%=lobbyCode%>'>Back</a>
 </div>
        
     </body>

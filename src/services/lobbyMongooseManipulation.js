@@ -9,6 +9,7 @@
 
 const Lobby = require('./../models/lobbyModel');
 const lobbyCode = require('./random').sixCharStr;
+const { merlinSees, evilSees, percivalSees } = require('../helpers/constants');
 
 //Lobby
 module.exports.createLobby = createLobby;
@@ -20,6 +21,8 @@ module.exports.findLobbyByCode = findLobbyByCode;
 module.exports.addPlayer = addPlayer;
 //TODO rename it to remove player
 module.exports.removeUser = removeUser;
+module.exports.findUser = findUser;
+module.exports.getUsernamesFromRoles = getUsernamesFromRoles;
 
 //avalon stuff
 module.exports.select = select;
@@ -77,6 +80,7 @@ function createLobby(
         { numberOfFails: 3 },
         { numberOfFails: 0 },
       ]),
+      started: false,
       votes: set(_votes, []),
       adventureVotes: set(_adventureVotes, []),
       shortcode: lobbyCode(),
@@ -158,6 +162,7 @@ function updateLobby(query, newData) {
         replace(lobby, newData, 'oberon');
         replace(lobby, newData, 'percival');
         replace(lobby, newData, 'arnold');
+        replace(lobby, newData, 'started');
         replace(lobby, newData, 'good');
         replace(lobby, newData, 'evil');
         replace(lobby, newData, 'currentRound');
@@ -202,11 +207,14 @@ function addPlayer(lobbyCode, player) {
           lobby.players.push(player);
         }
 
-        lobby.save(
-        ).then(lobby=>{
-          resolve(lobby);
-        }).catch(err=>{reject(err)});
-        
+        lobby
+          .save()
+          .then(lobby => {
+            resolve(lobby);
+          })
+          .catch(err => {
+            reject(err);
+          });
       })
       .catch(err => {
         if (err) reject(err);
@@ -434,4 +442,68 @@ function checkIfChoosen(lobbyCode, username, round) {
       resolve(false);
     });
   });
+}
+
+function findUser(lobbyCode, username) {
+  return new Promise((resolve, reject) => {
+    findLobbyByCode(lobbyCode).then(lobby => {
+      let user = '';
+      lobby.players.forEach(element => {
+        if (element.username === username) {
+          user = element;
+        }
+      });
+
+      if (user === '') {
+        reject(new Error(`User (${username} not found!)`));
+      }
+      resolve(user);
+    });
+  });
+}
+
+async function getUsernamesFromRoles(lobbyCode, role, username) {
+  const lobby = await findLobbyByCode(lobbyCode);
+  const result = [];
+
+  //TODO make a neet function for the things below :)
+
+  if (role === 'merlin') {
+    merlinSees.forEach(element => {
+      lobby.players.forEach(item => {
+        if (item.role === element && item.username !== username) {
+          result.push(item.username);
+        }
+      });
+    });
+  }
+
+  if (
+    role === 'minion of mordred' ||
+    role === 'assassin' ||
+    role === 'mordred' ||
+    role === 'morgana' ||
+    role === 'oberon'
+  ) {
+    evilSees.forEach(element => {
+      lobby.players.forEach(item => {
+        if (item.role === element && item.username !== username) {
+          result.push(item.username);
+        }
+      });
+    });
+  }
+
+  if (role === 'percival') {
+    percivalSees.forEach(element => {
+      lobby.players.forEach(item => {
+        if (item.role === element && item.username !== username) {
+          result.push(item.username);
+        }
+      });
+    });
+  }
+
+  console.log('\n\n\n\n\n', result, '\n\n\n\n\n');
+  return result;
 }

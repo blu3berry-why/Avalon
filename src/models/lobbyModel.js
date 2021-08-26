@@ -14,6 +14,8 @@ const Lobby = db.model('Lobby', {
   oberon: Boolean,
   percival: Boolean,
   arnold: Boolean,
+  //if the lobby has started
+  started: Boolean,
   //teams
   good: Number,
   evil: Number,

@@ -21,6 +21,7 @@ const leaveLobbyMW = require('../middlewares/lobby/leaveLobbyMW');
 const updateLobbySettingsMW = require('../middlewares/lobby/updateLobbySettingsMW');
 const connectLobbyMW = require('../middlewares/lobby/connectLobbyMW');
 const getCurrentPlayersMW = require('../middlewares/lobby/getCurrentPlayersMW');
+const setLobbyCodeMW = require('../middlewares/lobby/setLobbyCodeMW');
 
 // game logic middlewares
 
@@ -89,11 +90,17 @@ module.exports = function (app) {
   //TODO to make settings.html and a GET and POST request and a Middlewware for it!
   app.get(
     '/join/:lobby_id/settings',
+    authMW(),
+    setLobbyCodeMW(),
     getLobbySettingsMW(),
     renderMW('lobbysettings')
   );
 
-  app.post('/join/:lobby_id/settings', updateLobbySettingsMW());
+  app.post(
+    '/join/:lobby_id/settings',
+    setLobbyCodeMW(),
+    updateLobbySettingsMW()
+  );
 
   // TODO decide if it should be POST or USE or it could also be get if the lobby id is provided
 
@@ -101,42 +108,36 @@ module.exports = function (app) {
   app.get(
     '/join/:lobby_id',
     authMW(),
+    setLobbyCodeMW(),
     joinLobbyMW(),
     getCurrentPlayersMW(),
     renderMW('lobby')
   );
 
   // TODO because of the nicknames the request should be post to get the data but first we need a get to show the full lobby or we could do a post on /avalon/lobby
-  app.get('/leave/:lobby_id', authMW(), leaveLobbyMW());
+  app.get('/leave/:lobby_id', authMW(), setLobbyCodeMW(), leaveLobbyMW());
 
   /* starting the game:
         - randomizing roles
         - redirecting to the characters page      
   */
-  app.get('/game/start', authMW(), randomRoleMW(), showRoleMW());
+  app.get('/game/:lobby_id/start', authMW(), setLobbyCodeMW(), randomRoleMW());
 
   // show the character role
 
   app.get(
-    '/game/character',
+    '/game/:lobby_id/character',
     authMW(),
+    setLobbyCodeMW(),
     showRoleMW(),
-    //FIXME
-    (req, res, next) => {
-      res.locals.user_role = 'Mordred';
-      res.locals.picture = 'Insert picture';
-      res.locals.description = 'Here comes the description';
-      res.locals.team = 'Evil';
-      res.locals.members = ['Character1', 'Character2'];
-      return next();
-    },
     renderMW('character')
   );
 
   // the selection page
   app.get(
-    '/game/select',
+    '/game/:lobby_id/select',
     authMW(),
+    setLobbyCodeMW(),
 
     //FIXME
     (req, res, next) => {
@@ -147,36 +148,67 @@ module.exports = function (app) {
   );
 
   // getting the selected people
-  app.post('/game/select', authMW(), selectMW());
+  app.post('/game/:lobby_id/select', authMW(), setLobbyCodeMW(), selectMW());
 
   // showing the voting tab
 
   //TODO might be better to have a pop up
-  app.get('/game/voting', authMW(), getChosen(), renderMW('voting'));
+  app.get(
+    '/game/:lobby_id/voting',
+    authMW(),
+    setLobbyCodeMW(),
+    getChosen(),
+    renderMW('voting')
+  );
 
   // getting the result of the vote
-  app.post('/game/voting', authMW(), voteMW());
+  app.post('/game/:lobby_id/voting', authMW(), setLobbyCodeMW(), voteMW());
 
   // only for those who are going on the adventure : voting , for everyone else the scores show
-  app.get('/game/adventure', authMW(), adventureMW(), renderMW('voting'));
+  app.get(
+    '/game/:lobby_id/adventure',
+    authMW(),
+    setLobbyCodeMW(),
+    adventureMW(),
+    renderMW('voting')
+  );
 
   //getting the results of the adventure
   app.post(
-    '/game/adventure',
+    '/game/:lobby_id/adventure',
     authMW(),
+    setLobbyCodeMW(),
     adventureMW(),
     voteMW(),
     checkScoreMW()
   );
 
   // the assassins guess selection page
-  app.get('/game/assassin', authMW(), assassinRedirectMW(), renderMW('select'));
+  app.get(
+    '/game/:lobby_id/assassin',
+    authMW(),
+    setLobbyCodeMW(),
+    assassinRedirectMW(),
+    renderMW('select')
+  );
 
   // the result of the guess
-  app.post('/game/assassin', authMW(), assassinRedirectMW(), assassinGuessMW());
+  app.post(
+    '/game/:lobby_id/assassin',
+    authMW(),
+    setLobbyCodeMW(),
+    assassinRedirectMW(),
+    assassinGuessMW()
+  );
 
   //just the game score
-  app.get('/game', authMW(), checkScoreMW(), renderMW('gamescore'));
+  app.get(
+    '/game/:lobby_id',
+    authMW(),
+    setLobbyCodeMW(),
+    checkScoreMW(),
+    renderMW('gamescore')
+  );
 
   //RESOURCES
 
