@@ -17,76 +17,38 @@
       <h1>Settings</h1>
     </div>
 
+	<%roles = ['Assassin','Mordred','Morgana','Oberon','Percival','Arnold'];%>
+    <%for(let i = 0; i < roles.length; i++){ %>
     <form method="POST">
       <div class="form-check allign-text-center">
         <input
           class="form-check-input"
           type="checkbox"
-          value=""
+		  name="<%=roles[i].toLowerCase()%>"
+          value="true"
           id="flexCheckDefault"
-        />
+          <%if(characters[i]){%>
+
+        checked="checked" <%}%>
+
         <label class="form-check-label" for="flexCheckDefault">
-          Assassin
+          <%=roles[i]%>
         </label>
       </div>
+      <%}%>
 
-      <div class="form-check allign-text-center">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          value=""
-          id="flexCheckDefault"
-        />
-        <label class="form-check-label" for="flexCheckDefault"> Mordred </label>
-      </div>
-
-      <div class="form-check allign-text-center">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          value=""
-          id="flexCheckDefault"
-        />
-        <label class="form-check-label" for="flexCheckDefault"> Morgana </label>
-      </div>
-
-      <div class="form-check allign-text-center">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          value=""
-          id="flexCheckDefault"
-        />
-        <label class="form-check-label" for="flexCheckDefault"> Oberon </label>
-      </div>
-
-      <div class="form-check allign-text-center">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          value=""
-          id="flexCheckDefault"
-        />
-        <label class="form-check-label" for="flexCheckDefault">
-          Percival
-        </label>
-      </div>
-
-      <div class="form-check allign-text-center">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          value=""
-          id="flexCheckDefault"
-        />
-        <label class="form-check-label" for="flexCheckDefault"> Arnold </label>
-      </div>
-
-      <div class="row-buttons-mine allign-text-center" style="margin: 50px">
-        <button type="submit" class="btn btn-success" href="/join/<%=lobbyCode%>">
+      <div class="row-buttons-mine allign-text-center" style="margin-top: 50px">
+        <button
+          type="submit"
+          class="btn btn-success"
+          href="/join/<%=lobbyCode%>"
+        >
           Select
         </button>
       </div>
     </form>
+    <div class="allign-text-center" style="margin-top: 10px">
+      <a href="/join/<%=lobbyCode%>" class="btn btn-secondary">Cancel</a>
+    </div>
   </body>
 </html>

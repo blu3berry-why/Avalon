@@ -11,11 +11,12 @@ module.exports = function () {
     })
       .then(lobby => {
         // console.log(lobby);
+        //console.log('this is the joinLobbyMW: \n\n', lobby.players.length);
+        return next();
       })
       .catch(err => {
         console.log('ERROR:', err);
+        return next(err);
       });
-
-    return next();
   };
 };

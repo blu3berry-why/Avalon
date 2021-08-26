@@ -20,6 +20,7 @@ const joinLobbyMW = require('../middlewares/lobby/joinLobbyMW');
 const leaveLobbyMW = require('../middlewares/lobby/leaveLobbyMW');
 const updateLobbySettingsMW = require('../middlewares/lobby/updateLobbySettingsMW');
 const connectLobbyMW = require('../middlewares/lobby/connectLobbyMW');
+const getCurrentPlayersMW = require('../middlewares/lobby/getCurrentPlayersMW');
 
 // game logic middlewares
 
@@ -97,7 +98,13 @@ module.exports = function (app) {
   // TODO decide if it should be POST or USE or it could also be get if the lobby id is provided
 
   // joining an existing lobby or redirecting to the home page
-  app.get('/join/:lobby_id', authMW(), joinLobbyMW(), renderMW('lobby'));
+  app.get(
+    '/join/:lobby_id',
+    authMW(),
+    joinLobbyMW(),
+    getCurrentPlayersMW(),
+    renderMW('lobby')
+  );
 
   // TODO because of the nicknames the request should be post to get the data but first we need a get to show the full lobby or we could do a post on /avalon/lobby
   app.get('/leave/:lobby_id', authMW(), leaveLobbyMW());
@@ -145,7 +152,7 @@ module.exports = function (app) {
   // showing the voting tab
 
   //TODO might be better to have a pop up
-  app.get('/game/voting', authMW(),getChosen(), renderMW('voting'));
+  app.get('/game/voting', authMW(), getChosen(), renderMW('voting'));
 
   // getting the result of the vote
   app.post('/game/voting', authMW(), voteMW());

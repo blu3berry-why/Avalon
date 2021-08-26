@@ -14,6 +14,7 @@ const lobbyCode = require('./random').sixCharStr;
 module.exports.createLobby = createLobby;
 module.exports.updateLobby = updateLobby;
 module.exports.findLobby = findLobby;
+module.exports.findLobbyByCode = findLobbyByCode;
 
 //Player
 module.exports.addPlayer = addPlayer;
@@ -103,6 +104,30 @@ function createLobby(
  */
 function findLobby(query) {
   return new Promise((resolve, reject) => {
+    Lobby.findOne(query)
+      .then(lobby => {
+        resolve(lobby);
+      })
+      .catch(err => {
+        if (err) reject(err);
+      });
+  });
+}
+
+function findLobbyByCode(lobbyCode) {
+  return new Promise((resolve, reject) => {
+    Lobby.findOne({ shortcode: lobbyCode })
+      .then(lobby => {
+        resolve(lobby);
+      })
+      .catch(err => {
+        if (err) reject(err);
+      });
+  });
+}
+
+function findLobbys(query) {
+  return new Promise((resolve, reject) => {
     Lobby.find(query)
       .then(lobby => {
         resolve(lobby);
@@ -176,10 +201,12 @@ function addPlayer(lobbyCode, player) {
         if (!checkUserInLobby(lobby, player.username)) {
           lobby.players.push(player);
         }
-        resolve(lobby);
-        lobby.save(err => {
-          if (err) reject(err);
-        });
+
+        lobby.save(
+        ).then(lobby=>{
+          resolve(lobby);
+        }).catch(err=>{reject(err)});
+        
       })
       .catch(err => {
         if (err) reject(err);
