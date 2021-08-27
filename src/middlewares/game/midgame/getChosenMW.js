@@ -1,6 +1,6 @@
 'use strict';
 
-// gives the choosen players
+// gives the chosen players
 
 module.exports = function () {
   return function (req, res, next) {

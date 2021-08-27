@@ -12,7 +12,6 @@ function isSelected(role) {
 
 module.exports = function () {
   return async function (req, res, next) {
-    console.log(req.body);
     const lobby = await findLobbyByCode(req.params.lobby_id);
 
     lobby.assassin = isSelected(req.body.assassin);

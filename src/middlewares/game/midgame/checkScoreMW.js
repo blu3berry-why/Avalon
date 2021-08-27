@@ -1,11 +1,26 @@
 'use strict';
 
-// redirects to /avalon/game/play/end if either team has 3 points
+const {
+  findLobbyByCode,
+} = require('../../../services/lobbyMongooseManipulation');
+
+const { nextRound } = require('../../../services/gameLogic');
+
+// redirects to /game/play/end if either team has 3 points
 
 module.exports = function () {
-  return function (req, res, next) {
+  return async function (req, res, next) {
     res.locals.score = ['empty', 'mordred', 'arthur', 'mordred', 'empty'];
-    res.locals.king = 'Robika';
+
+    const lobby = await findLobbyByCode(res.locals.lobbyCode);
+
+    nextRound(lobby);
+    res.locals.king = lobby.votes[lobby.currentRound].king;
+    if (req.user.username === lobby.votes[lobby.currentRound].king) {
+      res.locals.isKing = true;
+    } else {
+      res.locals.isKing = false;
+    }
     return next();
   };
 };

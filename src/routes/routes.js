@@ -33,6 +33,7 @@ const showRoleMW = require('../middlewares/game/pregame/showRoleMW');
 const adventureMW = require('../middlewares/game/midgame/adventureMW');
 const checkScoreMW = require('../middlewares/game/midgame/checkScoreMW');
 const selectMW = require('../middlewares/game/midgame/selectMW');
+const selectResultsMW = require('../middlewares/game/midgame/selectResultsMW');
 const voteMW = require('../middlewares/game/midgame/voteMW');
 const getChosen = require('../middlewares/game/midgame/getChosenMW');
 
@@ -138,17 +139,17 @@ module.exports = function (app) {
     '/game/:lobby_id/select',
     authMW(),
     setLobbyCodeMW(),
-
-    //FIXME
-    (req, res, next) => {
-      res.locals.characters = ['Jonny', 'Sam', 'Billy', 'Max'];
-      return next();
-    },
+    selectMW(),
     renderMW('select')
   );
 
   // getting the selected people
-  app.post('/game/:lobby_id/select', authMW(), setLobbyCodeMW(), selectMW());
+  app.post(
+    '/game/:lobby_id/select',
+    authMW(),
+    setLobbyCodeMW(),
+    selectResultsMW()
+  );
 
   // showing the voting tab
 

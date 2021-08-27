@@ -30,7 +30,7 @@ const Lobby = db.model('Lobby', {
       round: Number,
       // TODO
       king: String,
-      choosen: [{ username: String }],
+      chosen: [{ username: String }],
       // The players and their votes
       results: [{ username: String, result: String }],
     },

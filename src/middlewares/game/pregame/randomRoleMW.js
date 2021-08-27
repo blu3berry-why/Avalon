@@ -11,7 +11,7 @@ module.exports = function () {
   return async function (req, res, next) {
     const lobby = await findLobbyByCode(req.params.lobby_id);
     if (lobby.started === false) {
-      console.log(lobby, req.params);
+      //console.log(lobby, req.params);
       await shuffleRoles(lobby);
     }
 

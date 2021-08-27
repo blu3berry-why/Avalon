@@ -175,7 +175,6 @@ async function shuffleRoles_byMatyi(lobby) {
     lobby.players[i].role = roles[i];
   }
   lobby.started = true;
-  console.log(lobby);
   await lobby.save();
 }
 

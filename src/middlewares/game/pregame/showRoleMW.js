@@ -13,8 +13,6 @@ module.exports = function () {
   return async function (req, res, next) {
     const user = await findUser(req.params.lobby_id, req.user.username);
 
-    console.log(user);
-
     const sees = await getUsernamesFromRoles(
       res.locals.lobbyCode,
       user.role,

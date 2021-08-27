@@ -27,7 +27,7 @@ module.exports.getUsernamesFromRoles = getUsernamesFromRoles;
 //avalon stuff
 module.exports.select = select;
 module.exports.addVote = addVote;
-module.exports.checkIfChoosen = checkIfChoosen;
+module.exports.checkIfChosen = checkIfChosen;
 module.exports.voteOnAdventure = voteOnAdventure;
 
 function set(_new, old) {
@@ -287,7 +287,7 @@ async function select(lobbyCode, username, round, selected) {
     }
 
     // !QUESTION: do we need to check if the usernames are infact in the lobby?
-    currentRound.choosen = selected;
+    currentRound.chosen = selected;
   }
 }
 
@@ -301,7 +301,7 @@ async function voteOnAdventure(lobbyCode, username, noOfAdv, vote) {
     );
   }
 
-  //!QUESTION: do we need to check if the person is choosen here?
+  //!QUESTION: do we need to check if the person is chosen here?
 
   //check if the person alredy voted
   let alreadyVoted = false;
@@ -347,18 +347,18 @@ async function select(lobbyCode, username, round, selected) {
     }
 
     // !QUESTION: do we need to check if the usernames are infact in the lobby?
-    currentRound.choosen = selected;
+    currentRound.chosen = selected;
   }
 }
 
-async function checkIfChoosen(lobbyCode, username, round) {
+async function checkIfChosen(lobbyCode, username, round) {
   const lobby = await Lobby.findOne({ shortcode: lobbyCode });
   if (lobby.currentRound !== round) {
     throw new Error(`The current round is ${lobby.currentRound} not ${round}`);
   }
 
-  for (let i = 0; i < lobby.votes[round].choosen.length; i++) {
-    if (lobby.votes[round].choosen[i].username === username) {
+  for (let i = 0; i < lobby.votes[round].chosen.length; i++) {
+    if (lobby.votes[round].chosen[i].username === username) {
       return true;
     }
   }
@@ -421,4 +421,6 @@ async function getUsernamesFromRoles(lobbyCode, role, username) {
       });
     });
   }
+
+  return result;
 }
