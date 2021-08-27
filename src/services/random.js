@@ -108,7 +108,7 @@ function shuffleRoles(lobby) {
   }
 }
 
-//!NOTE:-----------------------------------------------solution by matyi
+//!NOTE:-----------------------------------------------solution by Matyi
 
 function addRoles_byMatyi(lobby, count, roles, rolesCheck) {
   for (let i = 0; i < lobby.players.length; i++) {

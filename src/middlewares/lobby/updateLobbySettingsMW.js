@@ -11,24 +11,19 @@ function isSelected(role) {
 }
 
 module.exports = function () {
-  return function (req, res, next) {
+  return async function (req, res, next) {
     console.log(req.body);
-    findLobbyByCode(req.params.lobby_id)
-      .then(lobby => {
-        lobby.assassin = isSelected(req.body.assassin);
-        lobby.mordred = isSelected(req.body.mordred);
-        lobby.morgana = isSelected(req.body.morgana);
-        lobby.oberon = isSelected(req.body.oberon);
-        lobby.percival = isSelected(req.body.percival);
-        lobby.arnold = isSelected(req.body.arnold);
-        lobby
-          .save()
-          .then(lobby => {
-            const route = '/join/' + req.params.lobby_id;
-            return res.redirect(route);
-          })
-          .catch(err => next(err));
-      })
-      .catch(err => next(err));
+    const lobby = await findLobbyByCode(req.params.lobby_id);
+
+    lobby.assassin = isSelected(req.body.assassin);
+    lobby.mordred = isSelected(req.body.mordred);
+    lobby.morgana = isSelected(req.body.morgana);
+    lobby.oberon = isSelected(req.body.oberon);
+    lobby.percival = isSelected(req.body.percival);
+    lobby.arnold = isSelected(req.body.arnold);
+    await lobby.save();
+
+    const route = '/join/' + req.params.lobby_id;
+    return res.redirect(route);
   };
 };
