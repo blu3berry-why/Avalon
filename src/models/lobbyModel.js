@@ -16,6 +16,8 @@ const Lobby = db.model('Lobby', {
   arnold: Boolean,
   //if the lobby has started
   started: Boolean,
+  readyForAdventure: Boolean,
+  failCount: Number,
   //teams
   good: Number,
   evil: Number,
@@ -30,7 +32,7 @@ const Lobby = db.model('Lobby', {
       round: Number,
       // TODO
       king: String,
-      chosen: [{ username: String }],
+      chosen: [String],
       // The players and their votes
       results: [{ username: String, result: String }],
     },

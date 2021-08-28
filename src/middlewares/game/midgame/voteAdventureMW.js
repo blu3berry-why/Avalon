@@ -1,18 +1,18 @@
 'use strict';
 
-const { addVote } = require('../../../services/lobbyMongooseManipulation');
-
-// checks if the person already voted and if not takes his vote redirects to /avalon/game/adventure/?staying
+const {
+  voteOnAdventure,
+} = require('../../../services/lobbyMongooseManipulation');
 
 module.exports = function () {
   return function (req, res, next) {
     if (req.body.action === 'Success') {
-      addVote(res.locals.lobbyCode, {
+      voteOnAdventure(res.locals.lobbyCode, {
         username: req.user.username,
         result: 'success',
       });
     } else {
-      addVote(res.locals.lobbyCode, {
+      voteOnAdventure(res.locals.lobbyCode, {
         username: req.user.username,
         result: 'failure',
       });

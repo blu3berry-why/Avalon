@@ -4,8 +4,6 @@ const {
   findLobbyByCode,
 } = require('../../../services/lobbyMongooseManipulation');
 
-const { nextRound } = require('../../../services/gameLogic');
-
 // redirects to /game/play/end if either team has 3 points
 
 module.exports = function () {
@@ -14,7 +12,6 @@ module.exports = function () {
 
     const lobby = await findLobbyByCode(res.locals.lobbyCode);
 
-    nextRound(lobby);
     res.locals.king = lobby.votes[lobby.currentRound].king;
     if (req.user.username === lobby.votes[lobby.currentRound].king) {
       res.locals.isKing = true;

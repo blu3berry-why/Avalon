@@ -26,7 +26,8 @@ module.exports = function () {
         chosen.length
       )
     ) {
-      lobby.votes[lobby.currentRound].chosen === chosen;
+      lobby.votes[lobby.currentRound].chosen = chosen;
+      await lobby.save();
       return res.redirect('/game/' + res.locals.lobbyCode);
     } else {
       return res.send('<h1>This is not the right amount of people!</h1>');

@@ -1,10 +1,13 @@
 'use strict';
 
+const { getChosen } = require('../../../services/lobbyMongooseManipulation');
+
 // gives the chosen players
 
 module.exports = function () {
-  return function (req, res, next) {
-    res.locals.players = ['Frank', 'Alex', 'Meghan', 'Jenny', 'Paul'];
+  return async function (req, res, next) {
+    const chosen = await getChosen(res.locals.lobbyCode);
+    res.locals.players = chosen;
     return next();
   };
 };

@@ -36,6 +36,10 @@ const selectMW = require('../middlewares/game/midgame/selectMW');
 const selectResultsMW = require('../middlewares/game/midgame/selectResultsMW');
 const voteMW = require('../middlewares/game/midgame/voteMW');
 const getChosen = require('../middlewares/game/midgame/getChosenMW');
+const filterChosenMW = require('../middlewares/game/midgame/filterChosenMW');
+const nextRoundMW = require('../middlewares/game/midgame/nextRoundMW');
+const voteAdventureMW = require('../middlewares/game/midgame/voteAdventureMW');
+const setUpAdventureMW = require('../middlewares/game/midgame/setUpAdventureMW');
 
 //endgame
 const assassinGuessMW = require('../middlewares/game/endgame/assassinGuessMW');
@@ -170,8 +174,8 @@ module.exports = function (app) {
     '/game/:lobby_id/adventure',
     authMW(),
     setLobbyCodeMW(),
-    adventureMW(),
-    renderMW('voting')
+    filterChosenMW(),
+    renderMW('votingAdventure')
   );
 
   //getting the results of the adventure
@@ -180,8 +184,19 @@ module.exports = function (app) {
     authMW(),
     setLobbyCodeMW(),
     adventureMW(),
-    voteMW(),
     checkScoreMW()
+  );
+
+  app.get(
+    '/game/:lobby_id/waiting',
+    authMW(),
+    setLobbyCodeMW(),
+    //TODO check if voting is over
+    (req, res, next) => {
+      res.locals.remaining = 3;
+      return next();
+    },
+    renderMW('votinginprogress')
   );
 
   // the assassins guess selection page
@@ -227,16 +242,6 @@ module.exports = function (app) {
   app.get('/resources/login', function (req, res, next) {
     res.sendFile(getCurrentPath() + 'views/static/css/login.css');
   });
-
-  ///FIXME just for testing
-  app.get(
-    '/test/settings',
-    (req, res, next) => {
-      res.locals.characters = ['Jonny', 'Sam', 'Billy', 'Max'];
-      return next();
-    },
-    renderMW('select')
-  );
 
   // TODO homepage instead of login page
   // The home page after logging in

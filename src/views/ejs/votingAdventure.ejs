@@ -11,17 +11,29 @@
       <h1>Voting</h1>
     </div>
 
-    <div class="row-buttons-mine">
-      <div class="success">
-        <a type="button" class="btn btn-success" href="/game/<%=lobbyCode%>"
-          >Success</a
-        >
+    <form method="POST">
+      <div class="row-buttons-mine">
+        <div class="success">
+          <input
+            type="submit"
+            id="btn-success"
+            name="action"
+            class="btn btn-success"
+            value="Success"
+            href="/game/<%=lobbyCode%>/adventure"
+          />
+        </div>
+        <div class="failure">
+          <input
+            type="submit"
+            id="btn-fail"
+            name="action"
+            class="btn btn-danger"
+            value="Failure"
+            href="/game/<%=lobbyCode%>/adventure"
+          />
+        </div>
       </div>
-      <div class="failure">
-        <a type="button" class="btn btn-danger" href="/game/<%=lobbyCode%>"
-          >Failure</a
-        >
-      </div>
-    </div>
+    </form>
   </body>
 </html>
