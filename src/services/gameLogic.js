@@ -2,6 +2,7 @@ const { adventureLimit } = require('../helpers/constants');
 const { findLobbyByCode } = require('./lobbyMongooseManipulation');
 
 module.exports.nextRound = nextRound;
+module.exports.isFail = isFail;
 
 //sets the king as the user at the given round
 async function setKing(lobbyCode, round, username) {
@@ -45,6 +46,8 @@ async function nextRound(lobby) {
 
   await lobby.save();
 }
+
+
 
 function isFail(players, round, numberOfFails) {
   if (players > 6) {

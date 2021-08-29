@@ -1,8 +1,12 @@
 const { nextRound } = require('../../../services/gameLogic');
+const {
+  findLobbyByCode,
+} = require('../../../services/lobbyMongooseManipulation');
 
 module.exports = function () {
-  return function (req, res, next) {
-    nextRound();
+  return async function (req, res, next) {
+    const lobby = await findLobbyByCode(res.locals.lobbyCode);
+    await nextRound(lobby);
     return next();
   };
 };

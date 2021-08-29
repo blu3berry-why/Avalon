@@ -39,15 +39,18 @@
           href="/game/<%=lobbyCode%>/character"
           >Character</a
         >
-		
-		<%if(isKing){%>
-		<a
+        <%if(isChosen){%>
+        <a
           type="button"
-          class="btn btn-info"
-          href="/game/<%=lobbyCode%>/select"
+          class="btn btn-success"
+          href="/game/<%=lobbyCode%>/adventure"
+          >Adventure</a
+        >
+        <%}if(isKing){%>
+        <a type="button" class="btn btn-info" href="/game/<%=lobbyCode%>/select"
           >Select for adventure</a
         >
-		<%}%>
+        <%}%>
       </div>
     </div>
   </body>

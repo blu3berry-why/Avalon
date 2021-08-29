@@ -9,9 +9,9 @@ module.exports = function () {
   return async function (req, res, next) {
     const lobby = await findLobbyByCode(res.locals.lobbyCode);
     if (
-      lobby.players.length === lobby.votes[lobby.currentRound].results.length
+      lobby.players.length <= lobby.votes[lobby.currentRound].results.length
     ) {
-      const majority = Math.floor(lobby.players.length + 0.5);
+      const majority = Math.floor(lobby.players.length / 2 + 0.5);
       let successCount = 0;
 
       lobby.votes[lobby.currentRound].results.forEach(element => {
@@ -20,8 +20,12 @@ module.exports = function () {
         }
       });
 
-      if (majority <= successCount && !readyForAdventure) {
+      console.log(majority, successCount, '----------------');
+
+      if (majority <= successCount && !lobby.readyForAdventure) {
         lobby.failCount = 0;
+
+        console.log('This was a success!');
         // TODO go on adventure
         lobby.readyForAdventure = true;
         lobby.currentAdventure++;
@@ -32,12 +36,14 @@ module.exports = function () {
         await lobby.save();
       } else {
         // TODO increase failCount + reset
-        lobby.failCount++;
+        if (typeof lobby.failCount === 'undefined') {
+          lobby.failCount = 0;
+        }
+        lobby.failCount = lobby.failCount + 1;
         //nextRound saves the lobby!
-        nextRound(lobby);
+        await nextRound(lobby);
       }
-    } else {
-      return next();
     }
+    return res.redirect('/game/' + res.locals.lobbyCode);
   };
 };

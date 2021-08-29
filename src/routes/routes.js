@@ -126,7 +126,13 @@ module.exports = function (app) {
         - randomizing roles
         - redirecting to the characters page      
   */
-  app.get('/game/:lobby_id/start', authMW(), setLobbyCodeMW(), randomRoleMW());
+  app.get(
+    '/game/:lobby_id/start',
+    authMW(),
+    setLobbyCodeMW(),
+    nextRoundMW(),
+    randomRoleMW()
+  );
 
   // show the character role
 
@@ -167,7 +173,13 @@ module.exports = function (app) {
   );
 
   // getting the result of the vote
-  app.post('/game/:lobby_id/voting', authMW(), setLobbyCodeMW(), voteMW());
+  app.post(
+    '/game/:lobby_id/voting',
+    authMW(),
+    setLobbyCodeMW(),
+    voteMW(),
+    setUpAdventureMW()
+  );
 
   // only for those who are going on the adventure : voting , for everyone else the scores show
   app.get(
@@ -183,7 +195,7 @@ module.exports = function (app) {
     '/game/:lobby_id/adventure',
     authMW(),
     setLobbyCodeMW(),
-    adventureMW(),
+    voteAdventureMW(),
     checkScoreMW()
   );
 
@@ -204,8 +216,9 @@ module.exports = function (app) {
     '/game/:lobby_id/assassin',
     authMW(),
     setLobbyCodeMW(),
+    selectMW(),
     assassinRedirectMW(),
-    renderMW('select')
+    renderMW('assassinselect')
   );
 
   // the result of the guess

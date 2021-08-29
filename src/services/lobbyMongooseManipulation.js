@@ -73,11 +73,11 @@ async function createLobby(
     currentRound: set(_currentRound, 1),
     currentAdventure: set(_currentAdventure, 1),
     score: set(_score, [
-      { numberOfFails: 1 },
-      { numberOfFails: 2 },
-      { numberOfFails: 0 },
-      { numberOfFails: 3 },
-      { numberOfFails: 0 },
+      { numberOfFails: undefined },
+      { numberOfFails: undefined },
+      { numberOfFails: undefined },
+      { numberOfFails: undefined },
+      { numberOfFails: undefined },
     ]),
     started: false,
     failCount: 0,
@@ -203,7 +203,6 @@ async function addVote(lobbyCode, vote) {
   const lobby = await Lobby.findOne({ shortcode: lobbyCode });
   const round = lobby.currentRound;
 
-  console.log(lobby);
   //check if the user is in the lobby
   if (!checkUserInLobby(lobby, vote.username)) {
     //if not
@@ -252,9 +251,10 @@ async function voteOnAdventure(lobbyCode, vote) {
 
   const noOfAdv = lobby.currentAdventure;
 
+  console.log(lobby.adventureVotes);
   //check if the person alredy voted
   let alreadyVoted = false;
-  for (let i = 0; i < lobby.adventureVotes[noOfAdv].length; i++) {
+  for (let i = 0; i < lobby.adventureVotes[noOfAdv].results.length; i++) {
     if (lobby.adventureVotes[noOfAdv][i].username === vote.username) {
       alreadyVoted = true;
     }
@@ -358,5 +358,11 @@ async function getUsernamesFromRoles(lobbyCode, role, username) {
 
 async function getChosen(lobbyCode) {
   const lobby = await findLobbyByCode(lobbyCode);
-  return lobby.votes[lobby.currentRound].chosen;
+
+  // TESTME check if this is good!
+  if (lobby.readyForAdventure) {
+    return lobby.votes[lobby.currentRound].chosen;
+  } else {
+    return [];
+  }
 }

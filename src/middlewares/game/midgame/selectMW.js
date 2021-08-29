@@ -11,6 +11,10 @@ module.exports = function () {
     const characters = [];
     const lobby = await findLobbyByCode(res.locals.lobbyCode);
 
+    if (lobby.votes[lobby.currentRound].king !== req.user.username) {
+      return res.redirect('/game/' + res.locals.lobbyCode);
+    }
+
     lobby.players.forEach(element => {
       characters.push(element.username);
     });
