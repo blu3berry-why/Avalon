@@ -9,7 +9,12 @@ const {
 module.exports = function () {
   return async function (req, res, next) {
     const characters = [];
-    const lobby = await findLobbyByCode(res.locals.lobbyCode);
+    let lobby;
+    try {
+      lobby = await findLobbyByCode(res.locals.lobbyCode);
+    } catch (err) {
+      return next(err);
+    }
 
     if (lobby.votes[lobby.currentRound].king !== req.user.username) {
       return res.redirect('/game/' + res.locals.lobbyCode);

@@ -10,10 +10,15 @@ const {
 module.exports = function () {
   return async function (req, res, next) {
     const score = [];
-    const lobby = await findLobbyByCode(res.locals.lobbyCode);
+    let lobby;
+    try {
+      lobby = await findLobbyByCode(res.locals.lobbyCode);
+    } catch (err) {
+      return next(err);
+    }
 
     for (let i = 0; i < lobby.score.length; i++) {
-      if (typeof lobby.score[i] === 'undefined') {
+      if (typeof lobby.score[i].numberOfFails === 'undefined') {
         score.push('empty');
       } else {
         if (isFail(lobby.players.length, i, lobby.score[i].numberOfFails)) {

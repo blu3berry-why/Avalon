@@ -6,16 +6,20 @@ const { addVote } = require('../../../services/lobbyMongooseManipulation');
 
 module.exports = function () {
   return async function (req, res, next) {
-    if (req.body.action === 'Success') {
-      await addVote(res.locals.lobbyCode, {
-        username: req.user.username,
-        result: 'success',
-      });
-    } else {
-      await addVote(res.locals.lobbyCode, {
-        username: req.user.username,
-        result: 'failure',
-      });
+    try {
+      if (req.body.action === 'Success') {
+        await addVote(res.locals.lobbyCode, {
+          username: req.user.username,
+          result: 'success',
+        });
+      } else {
+        await addVote(res.locals.lobbyCode, {
+          username: req.user.username,
+          result: 'failure',
+        });
+      }
+    } catch (err) {
+      return next(err);
     }
     return next();
   };

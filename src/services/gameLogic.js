@@ -6,20 +6,25 @@ module.exports.isFail = isFail;
 
 //sets the king as the user at the given round
 async function setKing(lobbyCode, round, username) {
-  const lobby = await findLobbyByCode(lobbyCode);
-  lobby.votes[round].king = username;
-  await lobby.save();
+  try {
+    const lobby = await findLobbyByCode(lobbyCode);
+    lobby.votes[round].king = username;
+    await lobby.save();
+  } catch (err) {
+    throw err;
+  }
 }
 
 function findNextKing(players, username) {
   let index = 0;
   for (let i = 0; i < players.length; i++) {
     if (players[i].username === username) {
-      index = i;
+      //the next player
+      index = i + 1;
     }
   }
 
-  if (index === players.length - 1) {
+  if (index === players.length) {
     return players[0].username;
   } else {
     return players[index].username;
@@ -27,10 +32,15 @@ function findNextKing(players, username) {
 }
 
 async function nextRound(lobby) {
-  let round = lobby.votes.length;
-  if (lobby.votes.length === 0) {
-    round++;
+  if (lobby.nextRound === 0) {
+    lobby.votes[0] = {
+      king: '',
+    };
   }
+
+  lobby.currentRound = lobby.currentRound + 1;
+  let round = lobby.currentRound;
+
   lobby.votes[round] = {
     round: round,
   };
@@ -43,11 +53,12 @@ async function nextRound(lobby) {
   } else {
     lobby.votes[round].king = lobby.players[0].username;
   }
-
-  await lobby.save();
+  try {
+    await lobby.save();
+  } catch (err) {
+    throw err;
+  }
 }
-
-
 
 function isFail(players, round, numberOfFails) {
   if (players > 6) {

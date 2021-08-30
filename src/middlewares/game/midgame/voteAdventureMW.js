@@ -8,20 +8,24 @@ const {
 
 module.exports = function () {
   return async function (req, res, next) {
-    if (req.body.action === 'Success') {
-      await voteOnAdventure(res.locals.lobbyCode, {
-        username: req.user.username,
-        result: 'success',
-      });
-    } else {
-      await voteOnAdventure(res.locals.lobbyCode, {
-        username: req.user.username,
-        result: 'failure',
-      });
+    let lobby;
+    try {
+      if (req.body.action === 'Success') {
+        await voteOnAdventure(res.locals.lobbyCode, {
+          username: req.user.username,
+          result: 'success',
+        });
+      } else {
+        await voteOnAdventure(res.locals.lobbyCode, {
+          username: req.user.username,
+          result: 'failure',
+        });
+      }
+      lobby = await findLobbyByCode(res.locals.lobbyCode);
+    } catch (err) {
+      return next(err);
     }
 
-    //TESTME test this
-    const lobby = await findLobbyByCode(res.locals.lobbyCode);
     if (
       lobby.votes[lobby.currentRound].chosen.length ===
       lobby.adventureVotes[lobby.currentAdventure].results.length
@@ -33,7 +37,7 @@ module.exports = function () {
         }
       });
       //TESTME write scores
-      lobby.score[lobby.currentAdventure].numberOfFails = numberOfFails;
+      lobby.score[lobby.currentAdventure - 1].numberOfFails = numberOfFails;
       //TESTME check win
 
       let evilScore = 0;
@@ -47,15 +51,27 @@ module.exports = function () {
           }
         }
       }
-      if (goodScore === 3) {
+      if (goodScore === 3 && lobby.assassin) {
         res.redirect('/game/' + res.locals.lobbyCode + '/assassin');
       }
-      if(evilScore === 3){
+      if (goodScore === 3 && !lobby.assassin) {
+        res.redirect('/game/' + res.locals.lobbyCode + '/goodwin');
+      }
+
+      if (evilScore === 3) {
         res.redirect('/game/' + res.locals.lobbyCode + 'evilwin');
       }
 
-      await nextRound(lobby);
+      lobby.readyForAdventure = false;
+      try {
+        await nextRound(lobby);
+      } catch (err) {
+        return next(err);
+      }
+
+      console.log('----------------Next Round ----------------');
+    } else {
+      return res.redirect('/game/' + res.locals.lobbyCode);
     }
-    return res.redirect('/game/' + res.locals.lobbyCode);
   };
 };

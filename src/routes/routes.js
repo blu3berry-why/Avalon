@@ -4,6 +4,9 @@
 //  IMPORTS
 //---------------------------------
 
+//error handler
+const errorHandlerMW = require('../middlewares/error/errorHandlerMW');
+
 // common middlewares
 const renderMW = require('../middlewares/common/renderMW');
 
@@ -30,7 +33,6 @@ const randomRoleMW = require('../middlewares/game/pregame/randomRoleMW');
 const showRoleMW = require('../middlewares/game/pregame/showRoleMW');
 
 // midgame
-const adventureMW = require('../middlewares/game/midgame/adventureMW');
 const checkScoreMW = require('../middlewares/game/midgame/checkScoreMW');
 const selectMW = require('../middlewares/game/midgame/selectMW');
 const selectResultsMW = require('../middlewares/game/midgame/selectResultsMW');
@@ -216,7 +218,6 @@ module.exports = function (app) {
     '/game/:lobby_id/assassin',
     authMW(),
     setLobbyCodeMW(),
-    selectMW(),
     assassinRedirectMW(),
     renderMW('assassinselect')
   );
@@ -229,6 +230,13 @@ module.exports = function (app) {
     assassinRedirectMW(),
     assassinGuessMW()
   );
+
+  app.get('/game/:lobby_id/evilwin', (req, res, next) => {
+    return res.send('<h1>Evil win.</h1>');
+  });
+  app.get('/game/:lobby_id/goodwin', (req, res, next) => {
+    return res.send('<h1>Good win.</h1>');
+  });
 
   //just the game score
   app.get(
@@ -266,4 +274,6 @@ module.exports = function (app) {
   app.get('/*', (req, res, next) => {
     res.redirect('/');
   });
+
+  app.use(errorHandlerMW);
 };

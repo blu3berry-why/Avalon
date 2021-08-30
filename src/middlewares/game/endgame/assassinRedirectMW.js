@@ -9,7 +9,13 @@ const {
 
 module.exports = function () {
   return async function (req, res, next) {
-    const lobby = await findLobbyByCode(res.locals.lobbyCode);
+    let lobby;
+    try {
+      lobby = await findLobbyByCode(res.locals.lobbyCode);
+    } catch (err) {
+      return next(err);
+    }
+
     let assassin = false;
     lobby.players.forEach(element => {
       if (
@@ -19,6 +25,19 @@ module.exports = function () {
         assassin = true;
       }
     });
+
+    let characters = [];
+
+    lobby.players.forEach(element => {
+      characters.push(element.username);
+    });
+
+    characters = characters.filter(element => {
+      return element !== req.user.username;
+    });
+    res.locals.characters = characters;
+
+    console.log('This is the redirect middleware', assassin);
 
     res.locals.characters.filter(username => {
       return res.locals.username !== username;

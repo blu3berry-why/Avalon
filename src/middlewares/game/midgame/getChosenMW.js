@@ -6,7 +6,13 @@ const { getChosen } = require('../../../services/lobbyMongooseManipulation');
 
 module.exports = function () {
   return async function (req, res, next) {
-    const chosen = await getChosen(res.locals.lobbyCode);
+    let chosen;
+    try {
+      chosen = await getChosen(res.locals.lobbyCode);
+    } catch (err) {
+      return next(err);
+    }
+
     res.locals.players = chosen;
     return next();
   };

@@ -11,13 +11,19 @@ const {
 
 module.exports = function () {
   return async function (req, res, next) {
-    const user = await findUser(req.params.lobby_id, req.user.username);
+    let user;
+    let sees;
+    try {
+      user = await findUser(req.params.lobby_id, req.user.username);
 
-    const sees = await getUsernamesFromRoles(
-      res.locals.lobbyCode,
-      user.role,
-      user.username
-    );
+      sees = await getUsernamesFromRoles(
+        res.locals.lobbyCode,
+        user.role,
+        user.username
+      );
+    } catch (err) {
+      return next(err);
+    }
     res.locals.user_role = capitalize(user.role);
     res.locals.picture = 'Insert picture';
     if (user.role === 'minion of mordred') {
@@ -35,6 +41,13 @@ module.exports = function () {
     });
 
     res.locals.members = sees;
+
+    let isAssassin = false;
+    if (user.role === 'assassin') {
+      isAssassin = true;
+    }
+
+    res.locals.isAssassin = isAssassin;
 
     return next();
   };

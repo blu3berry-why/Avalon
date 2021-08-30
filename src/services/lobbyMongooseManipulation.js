@@ -10,6 +10,7 @@
 const Lobby = require('./../models/lobbyModel');
 const lobbyCode = require('./random').sixCharStr;
 const { merlinSees, evilSees, percivalSees } = require('../helpers/constants');
+const ApiError = require('../middlewares/error/ApiError');
 
 //Lobby
 module.exports.createLobby = createLobby;
@@ -70,8 +71,8 @@ async function createLobby(
     arnold: set(_arnold, false),
     good: set(_good, 0),
     evil: set(_evil, 0),
-    currentRound: set(_currentRound, 1),
-    currentAdventure: set(_currentAdventure, 1),
+    currentRound: set(_currentRound, 0),
+    currentAdventure: set(_currentAdventure, 0),
     score: set(_score, [
       { numberOfFails: undefined },
       { numberOfFails: undefined },
@@ -94,7 +95,12 @@ async function createLobby(
 
   const lobby = Lobby(data);
 
-  await lobby.save();
+  try {
+    await lobby.save();
+  } catch (err) {
+    throw err;
+  }
+
   return lobby;
 }
 
@@ -102,15 +108,27 @@ async function createLobby(
  * This might seem useless but if we make new functionalities we need to stick to the pattern
  */
 async function findLobby(query) {
-  return await Lobby.findOne(query);
+  try {
+    return await Lobby.findOne(query);
+  } catch (err) {
+    throw err;
+  }
 }
 
 async function findLobbyByCode(lobbyCode) {
-  return await Lobby.findOne({ shortcode: lobbyCode });
+  try {
+    return await Lobby.findOne({ shortcode: lobbyCode });
+  } catch (err) {
+    throw err;
+  }
 }
 
 async function findLobbys(query) {
-  return await Lobby.find(query);
+  try {
+    return await Lobby.find(query);
+  } catch (err) {
+    throw err;
+  }
 }
 
 function replace(obj, newData, field) {
@@ -124,35 +142,39 @@ function replace(obj, newData, field) {
  */
 
 async function updateLobby(query, newData) {
-  const lobby = await Lobby.findOne(query);
+  try {
+    const lobby = await Lobby.findOne(query);
 
-  const fields = [
-    'assassin',
-    'mordred',
-    'morgana',
-    'oberon',
-    'percival',
-    'arnold',
-    'started',
-    'failCount',
-    'readyForAdventure',
-    'good',
-    'evil',
-    'currentRound',
-    'currentAdventure',
-    'score',
-    'votes',
-    'adventureVotes',
-    'shortcode',
-    'players',
-    '_id',
-  ];
+    const fields = [
+      'assassin',
+      'mordred',
+      'morgana',
+      'oberon',
+      'percival',
+      'arnold',
+      'started',
+      'failCount',
+      'readyForAdventure',
+      'good',
+      'evil',
+      'currentRound',
+      'currentAdventure',
+      'score',
+      'votes',
+      'adventureVotes',
+      'shortcode',
+      'players',
+      '_id',
+    ];
 
-  fields.forEach(element => {
-    replace(lobby, newData, assassin);
-  });
+    fields.forEach(element => {
+      replace(lobby, newData, assassin);
+    });
 
-  await lobby.save();
+    await lobby.save();
+  } catch (err) {
+    throw err;
+  }
   return lobby;
 }
 
@@ -163,11 +185,15 @@ async function updateLobby(query, newData) {
  * @returns the changed lobby
  */
 async function addPlayer(lobbyCode, player) {
-  const lobby = await Lobby.findOne({ shortcode: lobbyCode });
-  if (!checkUserInLobby(lobby, player.username)) {
-    lobby.players.push(player);
+  try {
+    const lobby = await Lobby.findOne({ shortcode: lobbyCode });
+    if (!checkUserInLobby(lobby, player.username)) {
+      lobby.players.push(player);
+    }
+    await lobby.save();
+  } catch (err) {
+    throw err;
   }
-  await lobby.save();
   return lobby;
 }
 
@@ -200,39 +226,42 @@ function checkUserAlreadyVoted(lobby, round, username) {
  * @returns
  */
 async function addVote(lobbyCode, vote) {
-  const lobby = await Lobby.findOne({ shortcode: lobbyCode });
-  const round = lobby.currentRound;
-
-  //check if the user is in the lobby
-  if (!checkUserInLobby(lobby, vote.username)) {
-    //if not
-
-    throw new Error(
-      `This user (${vote.username}) is not in this lobby (${lobbyCode}).`
-    );
-  }
-  //check if the round is the current round
-  if (round !== lobby.currentRound) {
-    throw new Error(`Currently in the ${lobby.currentRound} not in ${round}.`);
-  }
-  //check if the person alredy voted
-
-  let hasvoted;
   try {
-    hasvoted = checkUserAlreadyVoted(lobby, round, vote.username);
+    const lobby = await Lobby.findOne({ shortcode: lobbyCode });
+    const round = lobby.currentRound;
+
+    //check if the user is in the lobby
+    if (!checkUserInLobby(lobby, vote.username)) {
+      //if not
+
+      throw ApiError.internal(
+        `This user (${vote.username}) is not in this lobby (${lobbyCode}).`
+      );
+    }
+    //check if the round is the current round
+    if (round !== lobby.currentRound) {
+      throw ApiError.internal(
+        `Currently in the ${lobby.currentRound} not in ${round}.`
+      );
+    }
+    //check if the person alredy voted
+
+    const hasvoted = checkUserAlreadyVoted(lobby, round, vote.username);
+
+    if (hasvoted) {
+      throw ApiError.internal(
+        `This user (${vote.username}) has already voted!`
+      );
+    }
+
+    lobby.votes[lobby.currentRound].results.push(vote);
+
+    // then we save the lobby and return the new lobby
+    //!NOTE: check if it is okay to return the lobby and let the async to save as it can.
+    await lobby.save();
   } catch (err) {
     throw err;
   }
-
-  if (hasvoted) {
-    throw new Error(`This user (${vote.username}) has already voted!`);
-  }
-
-  lobby.votes[lobby.currentRound].results.push(vote);
-
-  // then we save the lobby and return the new lobby
-  //!NOTE: check if it is okay to return the lobby and let the async to save as it can.
-  await lobby.save();
   return lobby;
 }
 
@@ -240,34 +269,41 @@ async function removeUser(lobbyCode, username) {
   function filterUser(value) {
     return !(value.username === username);
   }
-
-  const lobby = await Lobby.findOne({ shortcode: lobbyCode });
-  lobby.players = lobby.players.filter(filterUser);
-  await lobby.save();
+  try {
+    const lobby = await Lobby.findOne({ shortcode: lobbyCode });
+    lobby.players = lobby.players.filter(filterUser);
+    await lobby.save();
+  } catch (err) {
+    throw err;
+  }
 }
 
 async function voteOnAdventure(lobbyCode, vote) {
-  const lobby = await Lobby.findOne({ shortcode: lobbyCode });
+  try {
+    const lobby = await Lobby.findOne({ shortcode: lobbyCode });
 
-  const noOfAdv = lobby.currentAdventure;
+    const noOfAdv = lobby.currentAdventure;
 
-  console.log(lobby.adventureVotes);
-  //check if the person alredy voted
-  let alreadyVoted = false;
-  for (let i = 0; i < lobby.adventureVotes[noOfAdv].results.length; i++) {
-    if (lobby.adventureVotes[noOfAdv][i].username === vote.username) {
-      alreadyVoted = true;
+    console.log(lobby.adventureVotes);
+    //check if the person alredy voted
+    let alreadyVoted = false;
+    for (let i = 0; i < lobby.adventureVotes[noOfAdv].results.length; i++) {
+      if (lobby.adventureVotes[noOfAdv].results[i].username === vote.username) {
+        alreadyVoted = true;
+      }
     }
+
+    if (alreadyVoted) {
+      throw ApiError.internal(`This user ${vote.username} has already voted`);
+    }
+
+    lobby.adventureVotes[noOfAdv].results.push(vote);
+
+    // then we save the lobby and return the new lobby
+    await lobby.save();
+  } catch (err) {
+    throw err;
   }
-
-  if (alreadyVoted) {
-    throw new Error(`This user ${vote.username} has already voted`);
-  }
-
-  lobby.adventureVotes[noOfAdv].results.push(vote);
-
-  // then we save the lobby and return the new lobby
-  await lobby.save();
   return lobby;
 }
 
@@ -283,86 +319,101 @@ function removeUser(lobbyCode, username) {
 }
 
 async function checkIfChosen(lobbyCode, username, round) {
-  const lobby = await Lobby.findOne({ shortcode: lobbyCode });
-  if (lobby.currentRound !== round) {
-    throw new Error(`The current round is ${lobby.currentRound} not ${round}`);
-  }
+  try {
+    const lobby = await Lobby.findOne({ shortcode: lobbyCode });
 
-  for (let i = 0; i < lobby.votes[round].chosen.length; i++) {
-    if (lobby.votes[round].chosen[i].username === username) {
-      return true;
+    if (lobby.currentRound !== round) {
+      throw ApiError.internal(
+        `The current round is ${lobby.currentRound} not ${round}`
+      );
     }
+
+    for (let i = 0; i < lobby.votes[round].chosen.length; i++) {
+      if (lobby.votes[round].chosen[i].username === username) {
+        return true;
+      }
+    }
+    return false;
+  } catch (err) {
+    throw err;
   }
-  return false;
 }
 
 async function findUser(lobbyCode, username) {
-  const lobby = await findLobbyByCode(lobbyCode);
-  let user = '';
-  lobby.players.forEach(element => {
-    if (element.username === username) {
-      user = element;
-    }
-  });
+  try {
+    const lobby = await findLobbyByCode(lobbyCode);
 
-  if (user === '') {
-    throw new Error(`User (${username} not found!)`);
+    let user = '';
+    lobby.players.forEach(element => {
+      if (element.username === username) {
+        user = element;
+      }
+    });
+
+    if (user === '') {
+      throw ApiError.internal(`User (${username} not found!)`);
+    }
+    return user;
+  } catch (err) {
+    throw err;
   }
-  return user;
 }
 
 async function getUsernamesFromRoles(lobbyCode, role, username) {
-  const lobby = await findLobbyByCode(lobbyCode);
-  const result = [];
+  try {
+    const lobby = await findLobbyByCode(lobbyCode);
 
-  //TODO make a neet function for the things below :)
+    const result = [];
 
-  if (role === 'merlin') {
-    merlinSees.forEach(element => {
-      lobby.players.forEach(item => {
-        if (item.role === element && item.username !== username) {
-          result.push(item.username);
-        }
+    //TODO make a neet function for the things below :)
+
+    if (role === 'merlin') {
+      merlinSees.forEach(element => {
+        lobby.players.forEach(item => {
+          if (item.role === element && item.username !== username) {
+            result.push(item.username);
+          }
+        });
       });
-    });
-  }
+    }
 
-  if (
-    role === 'minion of mordred' ||
-    role === 'assassin' ||
-    role === 'mordred' ||
-    role === 'morgana' ||
-    role === 'oberon'
-  ) {
-    evilSees.forEach(element => {
-      lobby.players.forEach(item => {
-        if (item.role === element && item.username !== username) {
-          result.push(item.username);
-        }
+    if (
+      role === 'minion of mordred' ||
+      role === 'assassin' ||
+      role === 'mordred' ||
+      role === 'morgana' ||
+      role === 'oberon'
+    ) {
+      evilSees.forEach(element => {
+        lobby.players.forEach(item => {
+          if (item.role === element && item.username !== username) {
+            result.push(item.username);
+          }
+        });
       });
-    });
-  }
+    }
 
-  if (role === 'percival') {
-    percivalSees.forEach(element => {
-      lobby.players.forEach(item => {
-        if (item.role === element && item.username !== username) {
-          result.push(item.username);
-        }
+    if (role === 'percival') {
+      percivalSees.forEach(element => {
+        lobby.players.forEach(item => {
+          if (item.role === element && item.username !== username) {
+            result.push(item.username);
+          }
+        });
       });
-    });
-  }
+    }
 
-  return result;
+    return result;
+  } catch (err) {
+    throw err;
+  }
 }
 
 async function getChosen(lobbyCode) {
-  const lobby = await findLobbyByCode(lobbyCode);
-
-  // TESTME check if this is good!
-  if (lobby.readyForAdventure) {
+  try {
+    const lobby = await findLobbyByCode(lobbyCode);
     return lobby.votes[lobby.currentRound].chosen;
-  } else {
-    return [];
+  } catch (err) {
+    throw err;
   }
 }

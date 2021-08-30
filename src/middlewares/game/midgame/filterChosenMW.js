@@ -4,7 +4,13 @@ const { getChosen } = require('../../../services/lobbyMongooseManipulation');
 
 module.exports = function () {
   return async function (req, res, next) {
-    const chosen = await getChosen(res.locals.lobbyCode);
+    let chosen;
+    try {
+      chosen = await getChosen(res.locals.lobbyCode);
+    } catch (err) {
+      return next(err);
+    }
+
     let isChosen = false;
     chosen.forEach(element => {
       if (element === req.user.username) {

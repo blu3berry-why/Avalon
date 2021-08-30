@@ -2,6 +2,7 @@
 
 const { fileLoader } = require('ejs');
 const { player_balance } = require('../helpers/constants');
+const ApiError = require('../middlewares/error/ApiError');
 
 // A random 6 character long string
 
@@ -144,10 +145,10 @@ function addRoles_byMatyi(lobby, count, roles, rolesCheck) {
 async function shuffleRoles_byMatyi(lobby) {
   //if there aren't enough people throw an error also if there are too many people throw an error
   if (lobby.players.length < 5) {
-    throw new Error('Not enough people');
+    throw ApiError.internal('Not enough people');
   }
   if (lobby.players.length > 10) {
-    throw new Error('Too many people');
+    throw ApiError.internal('Too many people');
   }
 
   const count = {

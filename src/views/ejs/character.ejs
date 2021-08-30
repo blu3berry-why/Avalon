@@ -25,6 +25,11 @@
                 <% } %>
             </div>
         </div>
+        <%if(isAssassin){%>
+            <div class="allign-text-center" style="margin-bottom: 20px;">
+                <a type="button" class="btn btn-danger" href='/game/<%=lobbyCode%>/assassin'>Guess early</a>
+           </div>
+            <%}%>
 <div class="allign-text-center">
      <a type="button" class="btn btn-dark" href='/game/<%=lobbyCode%>'>Back</a>
 </div>

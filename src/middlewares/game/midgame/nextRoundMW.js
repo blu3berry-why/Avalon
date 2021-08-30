@@ -5,8 +5,15 @@ const {
 
 module.exports = function () {
   return async function (req, res, next) {
-    const lobby = await findLobbyByCode(res.locals.lobbyCode);
-    await nextRound(lobby);
+    try {
+      const lobby = await findLobbyByCode(res.locals.lobbyCode);
+      if (!lobby.started) {
+        await nextRound(lobby);
+      }
+    } catch (err) {
+      return next(err);
+    }
+
     return next();
   };
 };
