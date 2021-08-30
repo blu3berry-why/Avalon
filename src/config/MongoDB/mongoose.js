@@ -9,9 +9,16 @@ dotenv.config({ path: './../../.env' });
 // !NOTE: END
 
 const mongoose = require('mongoose');
-module.exports.connectionString = String(
-  process.env.MONGODB_URL + process.env.MONGODB_DATABASE_NAME
-);
+
+let connectionStr;
+if (process.env.PRODUCTION) {
+  connectionStr = process.env.DB_CONNECTION_STRING;
+} else {
+  connectionStr = String(
+    process.env.MONGODB_URL + process.env.MONGODB_DATABASE_NAME
+  );
+}
+module.exports.connectionString = connectionStr;
 
 mongoose.connect(this.connectionString, {
   useNewUrlParser: true,

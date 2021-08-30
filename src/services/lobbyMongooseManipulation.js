@@ -191,10 +191,10 @@ async function addPlayer(lobbyCode, player) {
       lobby.players.push(player);
     }
     await lobby.save();
+    return lobby;
   } catch (err) {
     throw err;
   }
-  return lobby;
 }
 
 function checkUserInLobby(lobby, username) {
@@ -259,10 +259,10 @@ async function addVote(lobbyCode, vote) {
     // then we save the lobby and return the new lobby
     //!NOTE: check if it is okay to return the lobby and let the async to save as it can.
     await lobby.save();
+    return lobby;
   } catch (err) {
     throw err;
   }
-  return lobby;
 }
 
 async function removeUser(lobbyCode, username) {
@@ -301,10 +301,10 @@ async function voteOnAdventure(lobbyCode, vote) {
 
     // then we save the lobby and return the new lobby
     await lobby.save();
+    return lobby;
   } catch (err) {
     throw err;
   }
-  return lobby;
 }
 
 function removeUser(lobbyCode, username) {

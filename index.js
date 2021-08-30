@@ -59,5 +59,8 @@ require('./src/routes/routes.js')(app);
 const port = process.env.PORT || 5000;
 
 let server = app.listen(port, function () {
+  if (process.env.PRODUCTION) {
+    console.log('Production');
+  }
   console.log('Listening on port : ' + port);
 });
