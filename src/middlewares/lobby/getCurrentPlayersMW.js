@@ -2,6 +2,8 @@
 const findLobbyByCode =
   require('../../services/lobbyMongooseManipulation').findLobbyByCode;
 
+// Sets the players' usernames to res.locals.players
+
 module.exports = function () {
   return async function (req, res, next) {
     try {

@@ -2,6 +2,8 @@
 const findLobbyByCode =
   require('../../services/lobbyMongooseManipulation').findLobbyByCode;
 
+// In the setting sets the currently chosen roles to be checked in the form
+
 module.exports = function () {
   return async function (req, res, next) {
     const lobbyCode = req.params.lobby_id;

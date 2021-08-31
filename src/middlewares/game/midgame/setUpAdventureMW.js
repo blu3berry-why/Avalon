@@ -13,7 +13,10 @@ module.exports = function () {
       if (
         lobby.players.length <= lobby.votes[lobby.currentRound].results.length
       ) {
+        // calculating the number of votes needed for a succesful vote
         const majority = Math.floor(lobby.players.length / 2 + 0.5);
+
+        // counting th eapproving votes
         let successCount = 0;
 
         lobby.votes[lobby.currentRound].results.forEach(element => {
@@ -34,7 +37,7 @@ module.exports = function () {
           };
           await lobby.save();
 
-          // this is going to run multiple times!!!
+          // TESTME this is going to run multiple times!!!
           // not true because if someone tries to vote twice the function throws an error
         } else {
           // increase failCount + reset

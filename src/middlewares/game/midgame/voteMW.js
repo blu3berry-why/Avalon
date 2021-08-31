@@ -2,8 +2,7 @@
 
 const { addVote } = require('../../../services/lobbyMongooseManipulation');
 
-// checks if the person already voted and if not takes his vote redirects to /avalon/game/adventure/?staying
-
+// checks if the person already voted and if not takes his vote
 module.exports = function () {
   return async function (req, res, next) {
     try {

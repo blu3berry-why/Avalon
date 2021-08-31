@@ -4,6 +4,8 @@ const {
   findLobbyByCode,
 } = require('./../../services/lobbyMongooseManipulation');
 
+//Searches for the provided code and joins the lobby.
+
 module.exports = function () {
   return async function (req, res, next) {
     try {

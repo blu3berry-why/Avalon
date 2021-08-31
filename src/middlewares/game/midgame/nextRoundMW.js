@@ -3,6 +3,8 @@ const {
   findLobbyByCode,
 } = require('../../../services/lobbyMongooseManipulation');
 
+// Calls next round if the lobby hasn't started its crucial because only once can you start the lobby
+
 module.exports = function () {
   return async function (req, res, next) {
     try {

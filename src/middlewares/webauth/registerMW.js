@@ -22,6 +22,6 @@ module.exports = function () {
     };
     db.models.User.create(newUser);
 
-    return res.redirect('/avalon');
+    return res.redirect('/');
   };
 };

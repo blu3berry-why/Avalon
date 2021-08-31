@@ -9,6 +9,7 @@ const {
 module.exports = function () {
   return async function (req, res, next) {
     let lobby;
+    //writing the result in the database
     try {
       if (req.body.action === 'Success') {
         await voteOnAdventure(res.locals.lobbyCode, {
@@ -26,6 +27,7 @@ module.exports = function () {
       return next(err);
     }
 
+    // if the current player is the last one who has voted checking the results
     if (
       lobby.votes[lobby.currentRound].chosen.length ===
       lobby.adventureVotes[lobby.currentAdventure].results.length
@@ -40,6 +42,7 @@ module.exports = function () {
       lobby.score[lobby.currentAdventure - 1].numberOfFails = numberOfFails;
       //TESTME check win
 
+      // finding out how this vote effected the score
       let evilScore = 0;
       let goodScore = 0;
       for (let i = 0; i < lobby.score.length; i++) {
@@ -62,14 +65,13 @@ module.exports = function () {
         res.redirect('/game/' + res.locals.lobbyCode + 'evilwin');
       }
 
+      // tis is crucial for only starting an adventure once and not skipping any
       lobby.readyForAdventure = false;
       try {
         await nextRound(lobby);
       } catch (err) {
         return next(err);
       }
-
-      console.log('----------------Next Round ----------------');
     } else {
       return res.redirect('/game/' + res.locals.lobbyCode);
     }

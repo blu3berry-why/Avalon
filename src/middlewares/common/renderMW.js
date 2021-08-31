@@ -1,6 +1,6 @@
 'use strict';
 
-//reders the static
+//reders the views
 
 module.exports = function (viewName) {
   return function (req, res) {

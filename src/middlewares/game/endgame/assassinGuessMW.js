@@ -6,6 +6,7 @@ const { findUser } = require('../../../services/lobbyMongooseManipulation');
 
 module.exports = function () {
   return async function (req, res, next) {
+    // Finds the user by the username
     let user;
     try {
       user = await findUser(res.locals.lobbyCode, req.body.person);
@@ -13,6 +14,7 @@ module.exports = function () {
       return next(err);
     }
 
+    // Decides by the found user's role
     if (user.role === 'merlin') {
       return res.redirect('/game/' + res.locals.lobbyCode + '/evilwin');
     } else {

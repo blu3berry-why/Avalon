@@ -1,5 +1,7 @@
 'use strict';
 
+//This is an error class for identifing the expected and the not expected errors
+
 class ApiError {
   constructor(code, message) {
     this.message = message;

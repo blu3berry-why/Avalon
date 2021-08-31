@@ -4,7 +4,8 @@ const {
   findLobbyByCode,
 } = require('../../../services/lobbyMongooseManipulation');
 
-// gets the player's selected team
+// Puts all players' username to res.locals.characters
+// Also if the current user isn't the king redirects to /game/lobbyCode
 
 module.exports = function () {
   return async function (req, res, next) {

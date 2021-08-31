@@ -2,6 +2,8 @@
 
 const { getChosen } = require('../../../services/lobbyMongooseManipulation');
 
+//If the current user is chosen for the adventure calls next() if not redirects to /game/lobbyCode
+
 module.exports = function () {
   return async function (req, res, next) {
     let chosen;

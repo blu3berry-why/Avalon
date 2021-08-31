@@ -10,6 +10,8 @@ function isSelected(role) {
   }
 }
 
+// Updates the database with the incoming data from the POST request
+
 module.exports = function () {
   return async function (req, res, next) {
     try {

@@ -2,7 +2,7 @@
 
 const { getChosen } = require('../../../services/lobbyMongooseManipulation');
 
-// gives the chosen players
+// sets the chosen players to res.locals.players
 
 module.exports = function () {
   return async function (req, res, next) {

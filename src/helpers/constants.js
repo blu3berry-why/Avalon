@@ -1,3 +1,4 @@
+// a list which can be indexed by player_balance[number of players].evil /.good and it gives the number of needed players in that category
 const player_balance = [
   undefined,
   undefined,
@@ -12,6 +13,7 @@ const player_balance = [
   { evil: 4, good: 6 },
 ];
 
+// the number of people per adventure also indexable, adventureLimit[number of players]
 const adventureLimit = [
   undefined,
   undefined,
@@ -27,12 +29,17 @@ const adventureLimit = [
   [undefined, 3, 4, 4, 5, 5],
 ];
 
+//the roles which merlin sees
 const merlinSees = ['minion of mordred', 'assassin', 'morgana', 'oberon'];
+//the roles which an evil sees
 const evilSees = ['minion of mordred', 'assassin', 'mordred', 'morgana'];
+//the roles which percival sees
 const percivalSees = ['merlin', 'morgana'];
 
+//the evil roles
 const evil = ['minion of mordred', 'assassin', 'mordred', 'morgana', 'oberon'];
 
+//descriptions for roles
 const description = {
   minion:
     'Evil subordinate of Mordred, remain hidden and sabotage the adventures.',

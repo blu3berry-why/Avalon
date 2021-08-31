@@ -5,7 +5,7 @@ const {
   findLobbyByCode,
 } = require('../../../services/lobbyMongooseManipulation');
 
-// redirects to /game/play/end if either team has 3 points
+// Puts the scores to res.locals.scores to be rendered and isKing and isChosen for the special button
 
 module.exports = function () {
   return async function (req, res, next) {
@@ -16,7 +16,8 @@ module.exports = function () {
     } catch (err) {
       return next(err);
     }
-
+    //BUG UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'score' of null
+    //Fills up the score list with the current scores to be displayed
     for (let i = 0; i < lobby.score.length; i++) {
       if (typeof lobby.score[i].numberOfFails === 'undefined') {
         score.push('empty');
@@ -30,6 +31,7 @@ module.exports = function () {
     }
     res.locals.score = score;
 
+    //Finding out if the current user is the king
     res.locals.king = lobby.votes[lobby.currentRound].king;
     if (req.user.username === lobby.votes[lobby.currentRound].king) {
       res.locals.isKing = true;
@@ -37,8 +39,8 @@ module.exports = function () {
       res.locals.isKing = false;
     }
 
+    //Finding out if the current player is chosen for the adventure
     let isChosen = false;
-    //is chosen for the adventure
     if (lobby.readyForAdventure) {
       for (let i = 0; i < lobby.votes[lobby.currentRound].chosen.length; i++) {
         if (lobby.votes[lobby.currentRound].chosen[i] === req.user.username) {
