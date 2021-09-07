@@ -14,8 +14,8 @@ const ApiError = require('../middlewares/error/ApiError');
 
 //Lobby
 module.exports.createLobby = createLobby;
-module.exports.updateLobby = updateLobby;
-module.exports.findLobby = findLobby;
+//module.exports.updateLobby = updateLobby;
+//module.exports.findLobby = findLobby;
 module.exports.findLobbyByCode = findLobbyByCode;
 
 //Player
@@ -107,13 +107,13 @@ async function createLobby(
 /**
  * This might seem useless but if we make new functionalities we need to stick to the pattern
  */
-async function findLobby(query) {
+/*async function findLobby(query) {
   try {
     return await Lobby.findOne(query);
   } catch (err) {
     throw err;
   }
-}
+}*/
 
 async function findLobbyByCode(lobbyCode) {
   try {
@@ -137,9 +137,9 @@ function replace(obj, newData, field) {
   }
 }
 
-/**
- *
- */
+/*
+ 
+ 
 
 async function updateLobby(query, newData) {
   try {
@@ -176,7 +176,7 @@ async function updateLobby(query, newData) {
     throw err;
   }
   return lobby;
-}
+}*/
 
 /**
  *
@@ -206,7 +206,7 @@ function checkUserInLobby(lobby, username) {
   return false;
 }
 
-function checkUserAlreadyVoted(lobby, round, username) {
+function checkUserAlreadyVoted(lobby, username) {
   //find the user's name
   for (let i = 0; i < lobby.votes[lobby.currentRound].results.length; i++) {
     if (lobby.votes[lobby.currentRound].results[i].username === username) {
@@ -246,7 +246,7 @@ async function addVote(lobbyCode, vote) {
     }
     //check if the person alredy voted
 
-    const hasvoted = checkUserAlreadyVoted(lobby, round, vote.username);
+    const hasvoted = checkUserAlreadyVoted(lobby, vote.username);
 
     if (hasvoted) {
       throw ApiError.internal(
@@ -307,7 +307,7 @@ async function voteOnAdventure(lobbyCode, vote) {
   }
 }
 
-function removeUser(lobbyCode, username) {
+/*function removeUser(lobbyCode, username) {
   function filterUser(value) {
     return !(value.username === username);
   }
@@ -316,7 +316,7 @@ function removeUser(lobbyCode, username) {
     lobby.players = lobby.players.filter(filterUser);
     lobby.save();
   });
-}
+}*/
 
 async function checkIfChosen(lobbyCode, username, round) {
   try {
