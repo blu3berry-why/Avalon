@@ -264,6 +264,11 @@ module.exports = function (app) {
     res.sendFile(getCurrentPath() + 'views/static/css/login.css');
   });
 
+  //TESTME
+  const sendDataMW = require('../middlewares/rest/sendDataMW');
+
+  app.get('/test', sendDataMW());
+
   // TODO homepage instead of login page
   // The home page after logging in
   app.get('/', authMW(), renderMW('home'));

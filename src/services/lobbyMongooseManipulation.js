@@ -123,6 +123,23 @@ async function findLobbyByCode(lobbyCode) {
   }
 }
 
+//try does this work?
+async function findLobbyByCodePNext(lobbyCode, next) {
+  try {
+    return await Lobby.findOne({ shortcode: lobbyCode });
+  } catch (err) {
+    return next(err);
+  }
+}
+
+async function saveLobby(lobby, next) {
+  try {
+    await lobby.save();
+  } catch (err) {
+    next(err);
+  }
+}
+
 async function findLobbys(query) {
   try {
     return await Lobby.find(query);

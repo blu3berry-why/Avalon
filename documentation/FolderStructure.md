@@ -48,12 +48,12 @@
   > `npm i`
 - A .env file with the attributes:
 
-  > MONGODB*URL= \_A local MongoDB server link for testing*
+  > MONGODB\_URL= _A local MongoDB server link for testing_
 
   > PORT= _The port via which the application is hosted_
 
-  > MONGODB*DATABASE_NAME= \_Name of the local database*
+  > MONGODB\_DATABASE\_NAME= _Name of the local database_
 
-  > DB*CONNECTION_STRING= \_The real database's connection url*
+  > DB\_CONNECTION\_STRING= _The real database's connection url_
 
   > PRODUCTION= **true** / **false** _Depending on which database we use if the local production is false if the cloud than it is true_
