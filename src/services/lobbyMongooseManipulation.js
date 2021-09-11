@@ -44,6 +44,7 @@ function set(_new, old) {
  * If there is no arguments it will create a lobby with the default parameters.
  */
 async function createLobby(
+  next,
   _assassin,
   _mordred,
   _morgana,
@@ -101,6 +102,8 @@ async function createLobby(
     throw err;
   }
 
+  //saveLobby(lobby, next);
+
   return lobby;
 }
 
@@ -138,6 +141,7 @@ async function saveLobby(lobby, next) {
   } catch (err) {
     next(err);
   }
+  return next(ApiError.internal('Hi im the save function :)'));
 }
 
 async function findLobbys(query) {

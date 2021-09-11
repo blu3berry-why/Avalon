@@ -1,0 +1,99 @@
+This routing only delivers data for the Client or accepts data from the Client
+
+Gettig data
+
+GET /api/:lobby_id/lobbyusers
+
+returns an object with the List which has the user objects
+
+e.g:
+    {
+        players: [
+            {username: 'player1', nickname: 'nickname1'},
+            {username: 'player2', nickname: 'nickname2'}
+        ]
+    }
+
+GET /api/:lobby_id/lobbysettings
+
+returns the lobby settings in an object
+
+    {
+        assassin : true,
+        morgana : false...
+    }
+
+GET /api/:lobby_id/score
+returns the current score of the game in an object
+
+     {
+         scores: [
+             {numberOfFails: 0},
+             {numberOfFails: 2},
+             {numberOfFails: 1},
+             {numberOfFails: 0},
+             {numberOfFails: undefined},
+         ]
+     }
+
+GET /api/:lobby_id/selected
+
+    {
+        selected: [{username: username}]
+    }
+
+GET /api/:lobby_id/adventurers
+
+    {
+        adventurers: [{username: username}];
+    }
+
+
+
+
+POST requests:
+
+POST /api/:lobby_id/hasvoted
+
+required:
+            {
+                    username: 'username'
+            }
+
+POST /api/:lobby_id/wasonadventuer
+
+required:
+            {
+                    username: 'username'
+            }
+
+POST /api/:lobby_id/vote
+
+required:
+            {
+                vote: {
+                    username: 'username'
+                    result: 'success' or 'failure'
+                }
+            }
+
+POST /api/:lobby_id/voteonadvenure
+
+required:
+            {
+                vote: {
+                    username: 'username'
+                    result: 'success' or 'failure'
+                }
+            }
+
+POST /api/:lobby_id/assassinguess
+
+            {
+                guess: {
+                    username: 'username'
+                    merlin: 'username'
+                }
+            }
+
+
